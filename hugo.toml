@@ -1,4 +1,4 @@
 baseURL = 'https://golanginterview.com/'
 languageCode = 'en-us'
 title = 'Go Interview'
-theme = "hugo-book"
+theme = 'hugo-book'
