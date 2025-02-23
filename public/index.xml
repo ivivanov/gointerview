@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Go Interview</title>
+    <title>Golang Interview Preparation on Go Interview</title>
     <link>https://golanginterview.com/</link>
-    <description>Recent content on Go Interview</description>
+    <description>Recent content in Golang Interview Preparation on Go Interview</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 22 Feb 2025 14:29:46 +0200</lastBuildDate>

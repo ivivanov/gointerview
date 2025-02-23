@@ -1,10 +1,12 @@
----
-title: "General Go Questions"
-date: 2025-02-22T14:29:46+02:00
-draft: false
-# bookComments: false
-# bookSearchExclude: false
----
++++
+date = '2025-02-22T14:29:46+02:00'
+draft = false
+title = 'General Go Questions'
+weight = 1
+# bookComments = false
+# bookSearchExclude = false
++++
+
 
 ## Questions?
 1. What are Go interfaces, and why are they important?
