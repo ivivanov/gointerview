@@ -30,6 +30,8 @@ Go interfaces are collections of method signatures that define a set of behavior
 Interfaces in Go provide a powerful tool for creating clean, modular, and extensible code by defining behavior contracts that types can fulfill without explicit declarations.
 
 
+---
+
 ### 2. What is a goroutine, and how does it differ from a thread?
 A **goroutine** in Go is a lightweight execution unit managed by the Go runtime, designed for concurrent programming. It allows functions to execute independently and concurrently with other parts of the program. Goroutines are efficient, requiring minimal memory and overhead compared to traditional threads, making them ideal for applications requiring thousands or even millions of concurrent tasks.
 
@@ -51,6 +53,8 @@ A **goroutine** in Go is a lightweight execution unit managed by the Go runtime,
 3. **Efficient Scheduling**: The Go runtime schedules goroutines in user space, avoiding the overhead of OS-level thread management.
 4. **Simpler Concurrency**: Goroutines handle shared memory safely by default, reducing the need for explicit synchronization mechanisms like locks.
 
+---
+
 ### 3. Explain the concept of channels in Go. When and why would you use them?
 Channels in Go are a fundamental concurrency primitive that enable communication and synchronization between goroutines. They act as typed conduits through which you can send and receive values.
 
@@ -71,6 +75,8 @@ Channels in Go are a fundamental concurrency primitive that enable communication
 2. **Simplify complex operations**: Channels can simplify the implementation of concurrent operations like parallel processing or asynchronous I/O.
 3. **Improved readability**: Using channels often leads to more readable and maintainable concurrent code compared to traditional synchronization primitives.
 4. **Efficient resource management**: Channels can be used to implement patterns like semaphores for managing access to limited resources.
+
+---
 
 ### 4. What is the difference between buffered and unbuffered channels?
 
@@ -117,6 +123,8 @@ fmt.Println(<-ch) // Prints 2
 
 In summary, the choice between buffered and unbuffered channels depends on the specific synchronization and communication needs of your concurrent program.
 
+---
+
 ### 5. What is the `iota` keyword, and how is it used in Go?
 The `iota` keyword in Go is a special identifier used in constant declarations to create a sequence of related constants with incrementing values. Here are the key points about `iota`:
 
@@ -148,3 +156,5 @@ const (
 ```
 
 Using `iota` simplifies the creation of related constants, making the code more maintainable and less prone to errors when defining sequences of values.
+
+---

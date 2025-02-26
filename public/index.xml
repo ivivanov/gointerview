@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Golang Interview Preparation on Go Interview</title>
-    <link>http://localhost:1313/</link>
+    <link>https://golanginterview.com/</link>
     <description>Recent content in Golang Interview Preparation on Go Interview</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 24 Feb 2025 10:59:36 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Feb 2025 16:17:47 +0200</lastBuildDate>
+    <atom:link href="https://golanginterview.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>General Go Questions</title>
-      <link>http://localhost:1313/general-go-questions/</link>
+      <link>https://golanginterview.com/general-go-questions/</link>
       <pubDate>Sat, 22 Feb 2025 14:29:46 +0200</pubDate>
-      <guid>http://localhost:1313/general-go-questions/</guid>
+      <guid>https://golanginterview.com/general-go-questions/</guid>
       <description>&lt;h2 id=&#34;questions&#34;&gt;&#xA;  Questions?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#questions&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;What are Go interfaces, and why are they important?&lt;/li&gt;&#xA;&lt;li&gt;What is a goroutine, and how does it differ from a thread?&lt;/li&gt;&#xA;&lt;li&gt;Explain the concept of channels in Go. When and why would you use them?&lt;/li&gt;&#xA;&lt;li&gt;What is the difference between buffered and unbuffered channels?&lt;/li&gt;&#xA;&lt;li&gt;What is the &lt;code&gt;iota&lt;/code&gt; keyword, and how is it used in Go?&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;answers&#34;&gt;&#xA;  Answers:&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#answers&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;h3 id=&#34;1-what-are-go-interfaces-and-why-are-they-important&#34;&gt;&#xA;  1. What are Go interfaces, and why are they important?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#1-what-are-go-interfaces-and-why-are-they-important&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h3&gt;&#xA;&lt;p&gt;Go interfaces are collections of method signatures that define a set of behaviors for types. They are important for several reasons:&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Concurrency and Performance</title>
-      <link>http://localhost:1313/concurrency-and-performance/</link>
+      <title>Concurrency and Debugging</title>
+      <link>https://golanginterview.com/concurrency-and-debugging/</link>
       <pubDate>Sun, 23 Feb 2025 12:06:22 +0200</pubDate>
-      <guid>http://localhost:1313/concurrency-and-performance/</guid>
-      <description>&lt;h2 id=&#34;questions&#34;&gt;&#xA;  Questions?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#questions&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;How do you debug concurrent code in Go? For example, where to place &lt;code&gt;wg.Add&lt;/code&gt; or when to close a channel?&lt;/li&gt;&#xA;&lt;li&gt;How would you optimize a web server written in Golang for high performance?&lt;/li&gt;&#xA;&lt;li&gt;What tools do you use for profiling Golang applications (e.g., &lt;code&gt;pprof&lt;/code&gt;)? Explain their usage.&lt;/li&gt;&#xA;&lt;li&gt;How do goroutines and channels help in leveraging multi-core systems? Provide practical examples.&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
+      <guid>https://golanginterview.com/concurrency-and-debugging/</guid>
+      <description>&lt;h2 id=&#34;questions&#34;&gt;&#xA;  Questions?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#questions&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;How do you debug concurrent code in Go?&lt;/li&gt;&#xA;&lt;li&gt;What is pprof and how do you use it to analyze goroutine stacks?&lt;/li&gt;&#xA;&lt;li&gt;When do you use WaitGroup?&lt;/li&gt;&#xA;&lt;li&gt;When to close a channel?&lt;/li&gt;&#xA;&lt;li&gt;How would you optimize a web server written in Golang for high performance?&lt;/li&gt;&#xA;&lt;li&gt;How do goroutines and channels help in leveraging multi-core systems? Provide practical examples.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;answers&#34;&gt;&#xA;  Answers:&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#answers&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;h3 id=&#34;1-how-do-you-debug-concurrent-code-in-go&#34;&gt;&#xA;  1. How do you debug concurrent code in Go?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#1-how-do-you-debug-concurrent-code-in-go&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h3&gt;&#xA;&lt;p&gt;Here are some examples of how to debug concurrent code in Go:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
