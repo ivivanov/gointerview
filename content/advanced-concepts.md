@@ -1,6 +1,6 @@
 +++
 date = '2025-02-27T14:52:32+02:00'
-draft = true
+draft = false
 title = 'Advanced Concepts'
 weight = 3
 +++
@@ -10,7 +10,8 @@ weight = 3
 1. Explain the concept of monomorphization.
 1. What is GCShape stenciling?
 1. Explain reflection in Go and its use cases. Why should it be used sparingly?
-1. How does Go handle memory management, and what role does garbage collection play?
+1. How does Go handle memory management?
+1. What role does garbage collection play?
 
 ## Answers:
 
@@ -86,7 +87,7 @@ In general, reflection should be considered when static alternatives are impract
 
 ---
 
-### 5. How does Go handle memory management, and what role does garbage collection play?
+### 5. How does Go handle memory management?
 Go handles memory management through a combination of stack and heap allocations, with its garbage collector (GC) playing a central role in managing heap memory. Here's an overview of how memory management works in Go and the role of garbage collection:
 
 #### **Memory Management in Go**
@@ -103,8 +104,7 @@ Go handles memory management through a combination of stack and heap allocations
 3. **Efficient Struct Design**:
    - Structs can be optimized by ordering fields from largest to smallest to minimize padding and save memory.
 
-#### **Role of Garbage Collection**
-
+### 6. What role does garbage collection play?
 Go's garbage collector automates the process of reclaiming unused memory, preventing manual memory management errors such as memory leaks or dangling pointers. It uses a **concurrent mark-and-sweep algorithm**, which operates as follows:
 
 1. **Mark Phase**:
