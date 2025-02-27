@@ -3,13 +3,13 @@ date = '2025-02-22T14:29:46+02:00'
 draft = false
 title = 'General Go Questions'
 weight = 1
-# bookComments = false
-# bookSearchExclude = false
 +++
-
 
 ## Questions?
 1. What are Go interfaces, and why are they important?
+1. How do you implement polymorphism in Go?
+1. What’s the difference between `nil` interfaces and empty interfaces in Go? How do you handle type assertions safely?
+1. What are variadic functions in Go, and when should they be used?
 1. What is a goroutine, and how does it differ from a thread?
 1. Explain the concept of channels in Go. When and why would you use them?
 1. What is the difference between buffered and unbuffered channels?
@@ -32,7 +32,107 @@ Interfaces in Go provide a powerful tool for creating clean, modular, and extens
 
 ---
 
-### 2. What is a goroutine, and how does it differ from a thread?
+### 2. How do you implement polymorphism in Go?
+Go implements polymorphism primarily through interfaces, without using generics. This approach is known as runtime polymorphism. Here are the key ways to achieve it:
+
+- ***Interface-based polymorphism***: Define interfaces that specify a set of methods, then implement these interfaces in different types. This allows for flexible code that can work with any type adhering to the interface contract
+- ***Type assertions and type switches***: These mechanisms allow for runtime type checking and branching based on concrete types, enabling polymorphic behavior
+- ***Empty interface (interface{})***: This can be used to accept any type, providing a form of polymorphism at the cost of type safety
+- ***Function values and closures***: These can be used to create polymorphic behavior by passing functions as arguments or returning them from other functions
+- ***Embedding***: Struct embedding allows for a form of composition that can achieve some polymorphic behaviors
+
+These techniques allow Go to support polymorphism without the need for generics, maintaining the language's focus on simplicity and compile-time type safety
+
+---
+
+### 3. What’s the difference between `nil` interfaces and empty interfaces in Go? How do you handle type assertions safely?
+The difference between `nil` interfaces and empty interfaces in Go is subtle but important:
+
+#### Nil interfaces
+- A nil interface has both its type and value set to nil.
+- It's the zero value of an interface type.
+- Checking for nil directly (e.g., `if x == nil`) works as expected.
+
+#### Empty interfaces
+- An empty interface (`interface{}`) can hold values of any type.
+- It may contain a nil value of a concrete type, but the interface itself is not nil.
+- Direct nil checks can be misleading.
+
+#### To handle type assertions safely:
+
+- Use the two-value form of type assertion:
+   ```go
+   value, ok := x.(Type)
+   if ok {
+       // Type assertion succeeded
+   } else {
+       // Type assertion failed
+   }
+   ```
+
+- Use type switches for multiple possible types:
+   ```go
+   switch v := x.(type) {
+   case string:
+       // v is a string
+   case int:
+       // v is an int
+   default:
+       // unknown type
+   }
+   ```
+
+- For nil checks on interfaces, use reflection:
+   ```go
+   func IsNil(value interface{}) bool {
+       return reflect.ValueOf(value).IsNil()
+   }
+   ```
+
+These methods help prevent panics and provide safer type conversions when working with interfaces.
+
+---
+
+### 4. What are variadic functions in Go, and when should they be used?
+Variadic functions in Go are functions that can accept a variable number of arguments of the same type. They are defined using an ellipsis (...) before the type of the last parameter in the function signature.
+
+Key characteristics of variadic functions:
+- They allow passing an arbitrary number of arguments, including zero
+- The variadic parameter must be the last one in the function definition
+- Internally, Go treats the variadic arguments as a slice of the specified type
+
+When to use variadic functions:
+- To accept an arbitrary number of arguments without creating a temporary slice
+- When the number of input parameters is unknown at compile time
+- To improve code readability and create more flexible APIs
+- To simulate optional arguments in function calls
+
+Examples of variadic functions in Go include fmt.Println() and custom functions like:
+
+```go
+func sum(nums ...int) int {
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+
+    return total
+}
+```
+
+This function can be called with any number of integer arguments:
+
+```go
+sum(1, 2, 3)
+sum(10, 20)
+sum()
+```
+
+Variadic functions provide a clean and elegant way to handle functions with a variable number of arguments.
+
+---
+
+### 5. What is a goroutine, and how does it differ from a thread?
 A **goroutine** in Go is a lightweight execution unit managed by the Go runtime, designed for concurrent programming. It allows functions to execute independently and concurrently with other parts of the program. Goroutines are efficient, requiring minimal memory and overhead compared to traditional threads, making them ideal for applications requiring thousands or even millions of concurrent tasks.
 
 #### Key Differences Between Goroutines and Threads
@@ -55,7 +155,7 @@ A **goroutine** in Go is a lightweight execution unit managed by the Go runtime,
 
 ---
 
-### 3. Explain the concept of channels in Go. When and why would you use them?
+### 6. Explain the concept of channels in Go. When and why would you use them?
 Channels in Go are a fundamental concurrency primitive that enable communication and synchronization between goroutines. They act as typed conduits through which you can send and receive values.
 
 #### Key Characteristics of Channels:
@@ -78,7 +178,7 @@ Channels in Go are a fundamental concurrency primitive that enable communication
 
 ---
 
-### 4. What is the difference between buffered and unbuffered channels?
+### 7. What is the difference between buffered and unbuffered channels?
 
 #### Unbuffered Channels
 Unbuffered channels have no capacity to store data and operate on a strict synchronous communication model.
@@ -125,7 +225,7 @@ In summary, the choice between buffered and unbuffered channels depends on the s
 
 ---
 
-### 5. What is the `iota` keyword, and how is it used in Go?
+### 8. What is the `iota` keyword, and how is it used in Go?
 The `iota` keyword in Go is a special identifier used in constant declarations to create a sequence of related constants with incrementing values. Here are the key points about `iota`:
 
 1. It generates integer constants starting from 0 and incrementing by 1 for each subsequent constant within a `const` block.

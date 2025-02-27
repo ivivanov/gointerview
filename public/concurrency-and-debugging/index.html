@@ -40,7 +40,7 @@ Here are some examples of how to debug concurrent code in Go:">
 <link rel="canonical" href="https://golanginterview.com/concurrency-and-debugging/">
 <link rel="stylesheet" href="/book.min.a1f07700b6a43252e796ba04c90c1bfdddc8f2dbc7dc0eb22bc62a17d4940fd1.css" integrity="sha256-ofB3ALakMlLnlroEyQwb/d3I8tvH3A6yK8YqF9SUD9E=" crossorigin="anonymous">
   <script defer src="/fuse.min.js"></script>
-  <script defer src="/en.search.min.66050cc6232b487349bf6a71d7acb9fdaf6f803f6b1917fb1c7d16c50bd89bcb.js" integrity="sha256-ZgUMxiMrSHNJv2px16y5/a9vgD9rGRf7HH0WxQvYm8s=" crossorigin="anonymous"></script>
+  <script defer src="/en.search.min.87e40509faeca773dc4a5b7c2f54e8f725fa626ad5f0e0bff309addd19fa7d88.js" integrity="sha256-h&#43;QFCfrsp3PcSlt8L1To9yX6YmrV8OC/8wmt3Rn6fYg=" crossorigin="anonymous"></script>
 
   <script defer src="/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js" integrity="sha256-b2&#43;Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC&#43;NdcPIvZhzk=" crossorigin="anonymous"></script>
 
@@ -225,8 +225,8 @@ https://github.com/alex-shpak/hugo-book
 </h3>
 <p>Here are some examples of how to debug concurrent code in Go:</p>
 <ul>
-<li>Using Delve debugger:</li>
-</ul>
+<li>
+<p>Using Delve debugger:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dlv debug
 </span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>dlv<span style="color:#f92672">)</span> break main.go:line
 </span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>dlv<span style="color:#f92672">)</span> <span style="color:#66d9ef">continue</span>
@@ -234,30 +234,30 @@ https://github.com/alex-shpak/hugo-book
 </span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>dlv<span style="color:#f92672">)</span> goroutine <span style="color:#ae81ff">1</span> next
 </span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>dlv<span style="color:#f92672">)</span> print var_name
 </span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>dlv<span style="color:#f92672">)</span> locals
-</span></span></code></pre></div><ul>
-<li>Race detector:
-A race condition occurs when two or more concurrent operations access shared data and at least one of them modifies it, potentially leading to unpredictable behavior due to the timing and sequence of the operations.</li>
-</ul>
+</span></span></code></pre></div></li>
+<li>
+<p>Race detector:
+A race condition occurs when two or more concurrent operations access shared data and at least one of them modifies it, potentially leading to unpredictable behavior due to the timing and sequence of the operations.</p>
 <p>Example:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">counter</span> <span style="color:#66d9ef">int</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">wg</span> <span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#ae81ff">2</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">wg</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Done</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Done</span>()
 </span></span><span style="display:flex;"><span>}(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">wg</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">wg</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Done</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">counter</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Done</span>()
 </span></span><span style="display:flex;"><span>}(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">wg</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Wait</span>()
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go run -race .
-</span></span></code></pre></div><ul>
-<li>Logging with goroutine IDs:</li>
-</ul>
+</span></span></code></pre></div></li>
+<li>
+<p>Logging with goroutine IDs:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">goID</span>() <span style="color:#66d9ef">int</span> {
 </span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">buf</span> [<span style="color:#ae81ff">64</span>]<span style="color:#66d9ef">byte</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">n</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">runtime</span>.<span style="color:#a6e22e">Stack</span>(<span style="color:#a6e22e">buf</span>[:], <span style="color:#66d9ef">false</span>)
@@ -281,19 +281,21 @@ A race condition occurs when two or more concurrent operations access shared dat
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">value</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ch</span> <span style="color:#75715e">// Blocks until sender sends data</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">value</span>)
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><ul>
-<li>Visualizing goroutines with execution trace:</li>
-</ul>
+</span></span></code></pre></div></li>
+<li>
+<p>Visualizing goroutines with execution trace:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go test -trace trace.out
 </span></span><span style="display:flex;"><span>go tool trace trace.out
-</span></span></code></pre></div><ul>
-<li>Naming goroutines for easier identification:</li>
-</ul>
+</span></span></code></pre></div></li>
+<li>
+<p>Naming goroutines for easier identification:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">runtime</span>.<span style="color:#a6e22e">SetFinalizer</span>(<span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>() {
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">debug</span>.<span style="color:#a6e22e">SetGoroutineLabels</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>(), <span style="color:#e6db74">&#34;worker&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ... worker logic</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">debug</span>.<span style="color:#a6e22e">SetGoroutineLabels</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>(), <span style="color:#e6db74">&#34;worker&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// ... worker logic</span>
 </span></span><span style="display:flex;"><span>}(), <span style="color:#66d9ef">nil</span>)
-</span></span></code></pre></div><p>These examples demonstrate various techniques for debugging concurrent Go code, from using specialized debuggers to leveraging built-in Go tools for analysis and visualization.</p>
+</span></span></code></pre></div></li>
+</ul>
+<p>These examples demonstrate various techniques for debugging concurrent Go code, from using specialized debuggers to leveraging built-in Go tools for analysis and visualization.</p>
 <hr>
 <h3 id="2-what-is-pprof-and-how-do-you-use-it-to-analyze-goroutine-stacks">
   2. What is pprof and how do you use it to analyze goroutine stacks?
@@ -577,7 +579,7 @@ A race condition occurs when two or more concurrent operations access shared dat
   <div class="flex flex-wrap justify-between">
 
 
-  <div><a class="flex align-center" href="https://github.com/ivivanov/gointerview/commit/faaf76faf3a022911fbe34fb95320b2356715d65" title='Last modified by ivivanov | Feb 26, 2025' target="_blank" rel="noopener">
+  <div><a class="flex align-center" href="https://github.com/ivivanov/gointerview/commit/59c256375640b733412b105402af172602007085" title='Last modified by ivivanov | Feb 26, 2025' target="_blank" rel="noopener">
       <img src="/svg/calendar.svg" class="book-icon" alt="" />
       <span>Feb 26, 2025</span>
     </a>

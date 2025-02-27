@@ -20,84 +20,85 @@ Here are some examples of how to debug concurrent code in Go:
 
 - Using Delve debugger:
 
-```bash
-dlv debug
-(dlv) break main.go:line
-(dlv) continue
-(dlv) goroutines
-(dlv) goroutine 1 next
-(dlv) print var_name
-(dlv) locals
-```
+	```bash
+	dlv debug
+	(dlv) break main.go:line
+	(dlv) continue
+	(dlv) goroutines
+	(dlv) goroutine 1 next
+	(dlv) print var_name
+	(dlv) locals
+	```
 
 - Race detector:
 A race condition occurs when two or more concurrent operations access shared data and at least one of them modifies it, potentially leading to unpredictable behavior due to the timing and sequence of the operations.
 
-Example:
-```go
-var counter int
-var wg sync.WaitGroup
-wg.Add(2)
+	Example:
+	```go
+	var counter int
+	var wg sync.WaitGroup
+	wg.Add(2)
 
-go func(wg *sync.WaitGroup) {
-    counter++
-    wg.Done()
-}(&wg)
+	go func(wg *sync.WaitGroup) {
+		counter++
+		wg.Done()
+	}(&wg)
 
-go func(wg *sync.WaitGroup) {
-    counter++
-    wg.Done()
-}(&wg)
+	go func(wg *sync.WaitGroup) {
+		counter++
+		wg.Done()
+	}(&wg)
 
-wg.Wait()
-```
+	wg.Wait()
+	```
 
-```bash
-go run -race .
-```
+	```bash
+	go run -race .
+	```
 
 - Logging with goroutine IDs:
 
-```go
-func goID() int {
-	var buf [64]byte
-	n := runtime.Stack(buf[:], false)
-	idField := strings.Fields(strings.TrimPrefix(string(buf[:n]), "goroutine "))[0]
-	id, err := strconv.Atoi(idField)
-	if err != nil {
-		panic(err)
+	```go
+	func goID() int {
+		var buf [64]byte
+		n := runtime.Stack(buf[:], false)
+		idField := strings.Fields(strings.TrimPrefix(string(buf[:n]), "goroutine "))[0]
+		id, err := strconv.Atoi(idField)
+		if err != nil {
+			panic(err)
+		}
+		return id
 	}
-	return id
-}
 
-func main() {
-	ch := make(chan int) // Unbuffered channel
+	func main() {
+		ch := make(chan int) // Unbuffered channel
 
-	go func() {
-		log.Printf("Goroutine %d: Starting work", goID())
+		go func() {
+			log.Printf("Goroutine %d: Starting work", goID())
 
-		ch <- 42 // Blocks until receiver is ready
-	}()
+			ch <- 42 // Blocks until receiver is ready
+		}()
 
-	value := <-ch // Blocks until sender sends data
-	fmt.Println(value)
-}
-```
+		value := <-ch // Blocks until sender sends data
+		fmt.Println(value)
+	}
+	```
+
 - Visualizing goroutines with execution trace:
 
-```bash
-go test -trace trace.out
-go tool trace trace.out
-```
+	```bash
+	go test -trace trace.out
+	go tool trace trace.out
+	```
 
 - Naming goroutines for easier identification:
 
-```go
-runtime.SetFinalizer(go func() {
-    debug.SetGoroutineLabels(context.TODO(), "worker")
-    // ... worker logic
-}(), nil)
-```
+	```go
+	runtime.SetFinalizer(go func() {
+		debug.SetGoroutineLabels(context.TODO(), "worker")
+		// ... worker logic
+	}(), nil)
+	```
 
 These examples demonstrate various techniques for debugging concurrent Go code, from using specialized debuggers to leveraging built-in Go tools for analysis and visualization.
 
