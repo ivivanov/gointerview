@@ -19,14 +19,14 @@ weight = 1
 
 ### 1. What are Go interfaces, and why are they important?
 Go interfaces are collections of method signatures that define a set of behaviors for types. They are important for several reasons:
-- Polymorphism: Interfaces enable polymorphic behavior, allowing different types to be used interchangeably as long as they implement the required methods
-- Decoupling: Interfaces help reduce dependencies between different parts of the codebase, promoting more modular and flexible designs
-- Code reusability: By using interfaces, developers can write more generic code that works with any type implementing the interface, reducing code duplication
-- Testing: Interfaces make it easier to create mock objects for unit testing, improving testability of code
-- Implicit implementation: Go's interfaces are implemented implicitly, meaning types don't need to explicitly declare which interfaces they implement. This reduces complexity and allows for more flexible designs
-- Composition over inheritance: Interfaces in Go encourage composition rather than hierarchical inheritance, leading to more flexible and maintainable code structures
-- Late abstraction: Go's interface design allows developers to define abstractions as they become apparent, rather than forcing early decisions about type hierarchies.
-- Reflection and type assertions: Interfaces enable runtime type inspection and manipulation through reflection and type assertions.
+- ***Polymorphism:*** Interfaces enable polymorphic behavior, allowing different types to be used interchangeably as long as they implement the required methods
+- ***Decoupling:*** Interfaces help reduce dependencies between different parts of the codebase, promoting more modular and flexible designs
+- ***Code reusability:*** By using interfaces, developers can write more generic code that works with any type implementing the interface, reducing code duplication
+- ***Testing:*** Interfaces make it easier to create mock objects for unit testing, improving testability of code
+- ***Implicit implementation:*** Go's interfaces are implemented implicitly, meaning types don't need to explicitly declare which interfaces they implement. This reduces complexity and allows for more flexible designs
+- ***Composition over inheritance:*** Interfaces in Go encourage composition rather than hierarchical inheritance, leading to more flexible and maintainable code structures
+- ***Late abstraction:*** Go's interface design allows developers to define abstractions as they become apparent, rather than forcing early decisions about type hierarchies.
+- ***Reflection and type assertions:*** Interfaces enable runtime type inspection and manipulation through reflection and type assertions.
 Interfaces in Go provide a powerful tool for creating clean, modular, and extensible code by defining behavior contracts that types can fulfill without explicit declarations.
 
 
