@@ -2,19 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/general-go-questions/</loc>
-    <lastmod>2025-02-27T15:53:03+02:00</lastmod>
+    <loc>https://golanginterview.com/010-basics/</loc>
+    <lastmod>2025-02-22T14:29:46+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/concurrency-and-debugging/</loc>
-    <lastmod>2025-02-27T14:51:29+02:00</lastmod>
+    <loc>https://golanginterview.com/020-concurrency/</loc>
+    <lastmod>2025-02-23T12:06:22+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/advanced-concepts/</loc>
-    <lastmod>2025-02-27T15:53:03+02:00</lastmod>
+    <loc>https://golanginterview.com/040-advanced-concepts/</loc>
+    <lastmod>2025-02-27T14:52:32+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/design/</loc>
-    <lastmod>2025-02-27T15:01:33+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://golanginterview.com/</loc>
     <lastmod>2025-02-23T12:50:02+02:00</lastmod>
   </url>
 </urlset>

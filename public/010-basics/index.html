@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="
+  Questions?
+  #
+
+
+What are Go interfaces, and why are they important?
+How do you implement polymorphism in Go?
+What’s the difference between nil interfaces and empty interfaces in Go? How do you handle type assertions safely?
+What are variadic functions in Go, and when should they be used?
+What is the iota keyword, and how is it used in Go?
+
+
+  Answers:
+  #
+
+
+  1. What are Go interfaces, and why are they important?
+  #
+
+Go interfaces are collections of method signatures that define a set of behaviors for types. They are important for several reasons:">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="https://golanginterview.com/010-basics/">
+  <meta property="og:site_name" content="Go Interview">
+  <meta property="og:title" content="Basics">
+  <meta property="og:description" content="Questions? # What are Go interfaces, and why are they important? How do you implement polymorphism in Go? What’s the difference between nil interfaces and empty interfaces in Go? How do you handle type assertions safely? What are variadic functions in Go, and when should they be used? What is the iota keyword, and how is it used in Go? Answers: # 1. What are Go interfaces, and why are they important? # Go interfaces are collections of method signatures that define a set of behaviors for types. They are important for several reasons:">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2025-02-22T14:29:46+02:00">
+    <meta property="article:modified_time" content="2025-02-22T14:29:46+02:00">
+<title>Basics | Go Interview</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://golanginterview.com/010-basics/">
+<link rel="stylesheet" href="/book.min.a1f07700b6a43252e796ba04c90c1bfdddc8f2dbc7dc0eb22bc62a17d4940fd1.css" integrity="sha256-ofB3ALakMlLnlroEyQwb/d3I8tvH3A6yK8YqF9SUD9E=" crossorigin="anonymous">
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.04143f0656204bea6d619580d1642f6eb7a8b4afec4752ac0af79c230883ccc9.js" integrity="sha256-BBQ/BlYgS&#43;ptYZWA0WQvbreotK/sR1KsCvecIwiDzMk=" crossorigin="anonymous"></script>
+
+  <script defer src="/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js" integrity="sha256-b2&#43;Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC&#43;NdcPIvZhzk=" crossorigin="anonymous"></script>
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-SMC54680CC"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-SMC54680CC');
+        }
+      </script><!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Go Interview</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/010-basics/" class="active">Basics</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/020-concurrency/" class="">Concurrency</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/040-advanced-concepts/" class="">Advanced Concepts</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Basics</h3>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#questions">Questions?</a></li>
+    <li><a href="#answers">Answers:</a>
+      <ul>
+        <li><a href="#1-what-are-go-interfaces-and-why-are-they-important">1. What are Go interfaces, and why are they important?</a></li>
+        <li><a href="#2-how-do-you-implement-polymorphism-in-go">2. How do you implement polymorphism in Go?</a></li>
+        <li><a href="#3-whats-the-difference-between-nil-interfaces-and-empty-interfaces-in-go-how-do-you-handle-type-assertions-safely">3. What’s the difference between <code>nil</code> interfaces and empty interfaces in Go? How do you handle type assertions safely?</a></li>
+        <li><a href="#4-what-are-variadic-functions-in-go-and-when-should-they-be-used">4. What are variadic functions in Go, and when should they be used?</a></li>
+        <li><a href="#8-what-is-the-iota-keyword-and-how-is-it-used-in-go">8. What is the <code>iota</code> keyword, and how is it used in Go?</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="questions">
+  Questions?
+  <a class="anchor" href="#questions">#</a>
+</h2>
+<ol>
+<li>What are Go interfaces, and why are they important?</li>
+<li>How do you implement polymorphism in Go?</li>
+<li>What’s the difference between <code>nil</code> interfaces and empty interfaces in Go? How do you handle type assertions safely?</li>
+<li>What are variadic functions in Go, and when should they be used?</li>
+<li>What is the <code>iota</code> keyword, and how is it used in Go?</li>
+</ol>
+<h2 id="answers">
+  Answers:
+  <a class="anchor" href="#answers">#</a>
+</h2>
+<h3 id="1-what-are-go-interfaces-and-why-are-they-important">
+  1. What are Go interfaces, and why are they important?
+  <a class="anchor" href="#1-what-are-go-interfaces-and-why-are-they-important">#</a>
+</h3>
+<p>Go interfaces are collections of method signatures that define a set of behaviors for types. They are important for several reasons:</p>
+<ul>
+<li><em><strong>Polymorphism:</strong></em> Interfaces enable polymorphic behavior, allowing different types to be used interchangeably as long as they implement the required methods</li>
+<li><em><strong>Decoupling:</strong></em> Interfaces help reduce dependencies between different parts of the codebase, promoting more modular and flexible designs</li>
+<li><em><strong>Code reusability:</strong></em> By using interfaces, developers can write more generic code that works with any type implementing the interface, reducing code duplication</li>
+<li><em><strong>Testing:</strong></em> Interfaces make it easier to create mock objects for unit testing, improving testability of code</li>
+<li><em><strong>Implicit implementation:</strong></em> Go&rsquo;s interfaces are implemented implicitly, meaning types don&rsquo;t need to explicitly declare which interfaces they implement. This reduces complexity and allows for more flexible designs</li>
+<li><em><strong>Composition over inheritance:</strong></em> Interfaces in Go encourage composition rather than hierarchical inheritance, leading to more flexible and maintainable code structures</li>
+<li><em><strong>Late abstraction:</strong></em> Go&rsquo;s interface design allows developers to define abstractions as they become apparent, rather than forcing early decisions about type hierarchies.</li>
+<li><em><strong>Reflection and type assertions:</strong></em> Interfaces enable runtime type inspection and manipulation through reflection and type assertions.
+Interfaces in Go provide a powerful tool for creating clean, modular, and extensible code by defining behavior contracts that types can fulfill without explicit declarations.</li>
+</ul>
+<hr>
+<h3 id="2-how-do-you-implement-polymorphism-in-go">
+  2. How do you implement polymorphism in Go?
+  <a class="anchor" href="#2-how-do-you-implement-polymorphism-in-go">#</a>
+</h3>
+<p>Go implements polymorphism primarily through interfaces, without using generics. This approach is known as runtime polymorphism. Here are the key ways to achieve it:</p>
+<ul>
+<li><em><strong>Interface-based polymorphism</strong></em>: Define interfaces that specify a set of methods, then implement these interfaces in different types. This allows for flexible code that can work with any type adhering to the interface contract</li>
+<li><em><strong>Type assertions and type switches</strong></em>: These mechanisms allow for runtime type checking and branching based on concrete types, enabling polymorphic behavior</li>
+<li><em><strong>Empty interface (interface{})</strong></em>: This can be used to accept any type, providing a form of polymorphism at the cost of type safety</li>
+<li><em><strong>Function values and closures</strong></em>: These can be used to create polymorphic behavior by passing functions as arguments or returning them from other functions</li>
+<li><em><strong>Embedding</strong></em>: Struct embedding allows for a form of composition that can achieve some polymorphic behaviors</li>
+</ul>
+<p>These techniques allow Go to support polymorphism without the need for generics, maintaining the language&rsquo;s focus on simplicity and compile-time type safety</p>
+<hr>
+<h3 id="3-whats-the-difference-between-nil-interfaces-and-empty-interfaces-in-go-how-do-you-handle-type-assertions-safely">
+  3. What’s the difference between <code>nil</code> interfaces and empty interfaces in Go? How do you handle type assertions safely?
+  <a class="anchor" href="#3-whats-the-difference-between-nil-interfaces-and-empty-interfaces-in-go-how-do-you-handle-type-assertions-safely">#</a>
+</h3>
+<p>The difference between <code>nil</code> interfaces and empty interfaces in Go is subtle but important:</p>
+<h4 id="nil-interfaces">
+  Nil interfaces
+  <a class="anchor" href="#nil-interfaces">#</a>
+</h4>
+<ul>
+<li>A nil interface has both its type and value set to nil.</li>
+<li>It&rsquo;s the zero value of an interface type.</li>
+<li>Checking for nil directly (e.g., <code>if x == nil</code>) works as expected.</li>
+</ul>
+<h4 id="empty-interfaces">
+  Empty interfaces
+  <a class="anchor" href="#empty-interfaces">#</a>
+</h4>
+<ul>
+<li>An empty interface (<code>interface{}</code>) can hold values of any type.</li>
+<li>It may contain a nil value of a concrete type, but the interface itself is not nil.</li>
+<li>Direct nil checks can be misleading.</li>
+</ul>
+<h4 id="to-handle-type-assertions-safely">
+  To handle type assertions safely:
+  <a class="anchor" href="#to-handle-type-assertions-safely">#</a>
+</h4>
+<ul>
+<li>
+<p>Use the two-value form of type assertion:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">value</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">x</span>.(<span style="color:#a6e22e">Type</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Type assertion succeeded</span>
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Type assertion failed</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+<li>
+<p>Use type switches for multiple possible types:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">x</span>.(<span style="color:#66d9ef">type</span>) {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">case</span> <span style="color:#66d9ef">string</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// v is a string</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">case</span> <span style="color:#66d9ef">int</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// v is an int</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// unknown type</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+<li>
+<p>For nil checks on interfaces, use reflection:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">IsNil</span>(<span style="color:#a6e22e">value</span> <span style="color:#66d9ef">interface</span>{}) <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">ValueOf</span>(<span style="color:#a6e22e">value</span>).<span style="color:#a6e22e">IsNil</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+</ul>
+<p>These methods help prevent panics and provide safer type conversions when working with interfaces.</p>
+<hr>
+<h3 id="4-what-are-variadic-functions-in-go-and-when-should-they-be-used">
+  4. What are variadic functions in Go, and when should they be used?
+  <a class="anchor" href="#4-what-are-variadic-functions-in-go-and-when-should-they-be-used">#</a>
+</h3>
+<p>Variadic functions in Go are functions that can accept a variable number of arguments of the same type. They are defined using an ellipsis (&hellip;) before the type of the last parameter in the function signature.</p>
+<p>Key characteristics of variadic functions:</p>
+<ul>
+<li>They allow passing an arbitrary number of arguments, including zero</li>
+<li>The variadic parameter must be the last one in the function definition</li>
+<li>Internally, Go treats the variadic arguments as a slice of the specified type</li>
+</ul>
+<p>When to use variadic functions:</p>
+<ul>
+<li>To accept an arbitrary number of arguments without creating a temporary slice</li>
+<li>When the number of input parameters is unknown at compile time</li>
+<li>To improve code readability and create more flexible APIs</li>
+<li>To simulate optional arguments in function calls</li>
+</ul>
+<p>Examples of variadic functions in Go include fmt.Println() and custom functions like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">nums</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">total</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">num</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">nums</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">total</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">num</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">total</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This function can be called with any number of integer arguments:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">sum</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sum</span>(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sum</span>()
+</span></span></code></pre></div><p>Variadic functions provide a clean and elegant way to handle functions with a variable number of arguments.</p>
+<hr>
+<h3 id="8-what-is-the-iota-keyword-and-how-is-it-used-in-go">
+  8. What is the <code>iota</code> keyword, and how is it used in Go?
+  <a class="anchor" href="#8-what-is-the-iota-keyword-and-how-is-it-used-in-go">#</a>
+</h3>
+<p>The <code>iota</code> keyword in Go is a special identifier used in constant declarations to create a sequence of related constants with incrementing values. Here are the key points about <code>iota</code>:</p>
+<ol>
+<li>It generates integer constants starting from 0 and incrementing by 1 for each subsequent constant within a <code>const</code> block.</li>
+<li><code>iota</code> resets to 0 whenever the <code>const</code> keyword appears in the source code.</li>
+<li>It&rsquo;s commonly used to create enumerations or sets of related constants.</li>
+<li><code>iota</code> can be used in expressions, allowing for more complex constant definitions.</li>
+</ol>
+<p>Example usage:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Monday</span> = <span style="color:#66d9ef">iota</span>    <span style="color:#75715e">// 0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Tuesday</span>          <span style="color:#75715e">// 1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Wednesday</span>        <span style="color:#75715e">// 2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Thursday</span>         <span style="color:#75715e">// 3</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Friday</span>           <span style="color:#75715e">// 4</span>
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p><code>iota</code> can also be used in more complex expressions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">KB</span> = <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#ae81ff">10</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">iota</span>)  <span style="color:#75715e">// 1 &lt;&lt; (10 * 0) = 1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">MB</span>                     <span style="color:#75715e">// 1 &lt;&lt; (10 * 1) = 1024</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">GB</span>                     <span style="color:#75715e">// 1 &lt;&lt; (10 * 2) = 1048576</span>
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>Using <code>iota</code> simplifies the creation of related constants, making the code more maintainable and less prone to errors when defining sequences of values.</p>
+<hr>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/ivivanov/gointerview/edit/master/content/010-basics.md" target="_blank" rel="noopener">
+      <img src="/svg/edit.svg" class="book-icon" alt="" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#questions">Questions?</a></li>
+    <li><a href="#answers">Answers:</a>
+      <ul>
+        <li><a href="#1-what-are-go-interfaces-and-why-are-they-important">1. What are Go interfaces, and why are they important?</a></li>
+        <li><a href="#2-how-do-you-implement-polymorphism-in-go">2. How do you implement polymorphism in Go?</a></li>
+        <li><a href="#3-whats-the-difference-between-nil-interfaces-and-empty-interfaces-in-go-how-do-you-handle-type-assertions-safely">3. What’s the difference between <code>nil</code> interfaces and empty interfaces in Go? How do you handle type assertions safely?</a></li>
+        <li><a href="#4-what-are-variadic-functions-in-go-and-when-should-they-be-used">4. What are variadic functions in Go, and when should they be used?</a></li>
+        <li><a href="#8-what-is-the-iota-keyword-and-how-is-it-used-in-go">8. What is the <code>iota</code> keyword, and how is it used in Go?</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
