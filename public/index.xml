@@ -2,31 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Golang Interview Preparation on Go Interview</title>
-    <link>https://golanginterview.com/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content in Golang Interview Preparation on Go Interview</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 28 Feb 2025 16:06:12 +0200</lastBuildDate>
-    <atom:link href="https://golanginterview.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 28 Feb 2025 16:21:32 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Basics</title>
-      <link>https://golanginterview.com/010-basics/</link>
+      <link>http://localhost:1313/010-basics/</link>
       <pubDate>Sat, 22 Feb 2025 14:29:46 +0200</pubDate>
-      <guid>https://golanginterview.com/010-basics/</guid>
+      <guid>http://localhost:1313/010-basics/</guid>
       <description>&lt;h2 id=&#34;questions&#34;&gt;&#xA;  Questions?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#questions&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;What are Go interfaces, and why are they important?&lt;/li&gt;&#xA;&lt;li&gt;How do you implement polymorphism in Go?&lt;/li&gt;&#xA;&lt;li&gt;What’s the difference between &lt;code&gt;nil&lt;/code&gt; interfaces and empty interfaces in Go? How do you handle type assertions safely?&lt;/li&gt;&#xA;&lt;li&gt;What are variadic functions in Go, and when should they be used?&lt;/li&gt;&#xA;&lt;li&gt;What is the &lt;code&gt;iota&lt;/code&gt; keyword, and how is it used in Go?&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;answers&#34;&gt;&#xA;  Answers:&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#answers&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;h3 id=&#34;1-what-are-go-interfaces-and-why-are-they-important&#34;&gt;&#xA;  1. What are Go interfaces, and why are they important?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#1-what-are-go-interfaces-and-why-are-they-important&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h3&gt;&#xA;&lt;p&gt;Go interfaces are collections of method signatures that define a set of behaviors for types. They are important for several reasons:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Concurrency</title>
-      <link>https://golanginterview.com/020-concurrency/</link>
+      <link>http://localhost:1313/020-concurrency/</link>
       <pubDate>Sun, 23 Feb 2025 12:06:22 +0200</pubDate>
-      <guid>https://golanginterview.com/020-concurrency/</guid>
+      <guid>http://localhost:1313/020-concurrency/</guid>
       <description>&lt;h2 id=&#34;questions&#34;&gt;&#xA;  Questions?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#questions&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;What is a goroutine, and how does it differ from a thread?&lt;/li&gt;&#xA;&lt;li&gt;Explain the concept of channels in Go. When and why would you use them?&lt;/li&gt;&#xA;&lt;li&gt;What is the difference between buffered and unbuffered channels?&lt;/li&gt;&#xA;&lt;li&gt;When do you use WaitGroup?&lt;/li&gt;&#xA;&lt;li&gt;When to close a channel?&lt;/li&gt;&#xA;&lt;li&gt;How would you optimize a web server written in Golang for high performance?&lt;/li&gt;&#xA;&lt;li&gt;How do goroutines and channels help in leveraging multi-core systems? Provide practical examples.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;answers&#34;&gt;&#xA;  Answers:&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#answers&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;h3 id=&#34;1-what-is-a-goroutine-and-how-does-it-differ-from-a-thread&#34;&gt;&#xA;  1. What is a goroutine, and how does it differ from a thread?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#1-what-is-a-goroutine-and-how-does-it-differ-from-a-thread&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h3&gt;&#xA;&lt;p&gt;A &lt;strong&gt;goroutine&lt;/strong&gt; in Go is a lightweight execution unit managed by the Go runtime, designed for concurrent programming. It allows functions to execute independently and concurrently with other parts of the program. Goroutines are efficient, requiring minimal memory and overhead compared to traditional threads, making them ideal for applications requiring thousands or even millions of concurrent tasks.&lt;/p&gt;</description>
     </item>
     <item>
+      <title>Testing &amp; Debugging</title>
+      <link>http://localhost:1313/030-testing--debugging/</link>
+      <pubDate>Fri, 28 Feb 2025 15:49:40 +0200</pubDate>
+      <guid>http://localhost:1313/030-testing--debugging/</guid>
+      <description>&lt;h2 id=&#34;questions&#34;&gt;&#xA;  Questions?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#questions&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;What are some best practices for writing unit tests in Go? How do you handle mocking dependencies?&lt;/li&gt;&#xA;&lt;li&gt;Explain how to use table-driven tests in Go with an example.&lt;/li&gt;&#xA;&lt;li&gt;How do you debug concurrent code in Go?&lt;/li&gt;&#xA;&lt;li&gt;What is pprof and how do you use it to analyze goroutine stacks?&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;answers&#34;&gt;&#xA;  Answers:&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#answers&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;h3 id=&#34;1-what-are-some-best-practices-for-writing-unit-tests-in-go-how-do-you-handle-mocking-dependencies&#34;&gt;&#xA;  1. What are some best practices for writing unit tests in Go? How do you handle mocking dependencies?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#1-what-are-some-best-practices-for-writing-unit-tests-in-go-how-do-you-handle-mocking-dependencies&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h3&gt;&#xA;&lt;hr&gt;&#xA;&lt;h3 id=&#34;2-explain-how-to-use-table-driven-tests-in-go-with-an-example&#34;&gt;&#xA;  2. Explain how to use table-driven tests in Go with an example.&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#2-explain-how-to-use-table-driven-tests-in-go-with-an-example&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h3&gt;&#xA;&lt;hr&gt;&#xA;&lt;h3 id=&#34;3-how-do-you-debug-concurrent-code-in-go&#34;&gt;&#xA;  3. How do you debug concurrent code in Go?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#3-how-do-you-debug-concurrent-code-in-go&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h3&gt;&#xA;&lt;p&gt;Here are some examples of how to debug concurrent code in Go:&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Advanced Concepts</title>
-      <link>https://golanginterview.com/040-advanced-concepts/</link>
+      <link>http://localhost:1313/040-advanced-concepts/</link>
       <pubDate>Thu, 27 Feb 2025 14:52:32 +0200</pubDate>
-      <guid>https://golanginterview.com/040-advanced-concepts/</guid>
+      <guid>http://localhost:1313/040-advanced-concepts/</guid>
       <description>&lt;h2 id=&#34;questions&#34;&gt;&#xA;  Questions?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#questions&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;What is dynamic dispatch?&lt;/li&gt;&#xA;&lt;li&gt;Explain the concept of monomorphization.&lt;/li&gt;&#xA;&lt;li&gt;What is GCShape stenciling?&lt;/li&gt;&#xA;&lt;li&gt;Explain reflection in Go and its use cases. Why should it be used sparingly?&lt;/li&gt;&#xA;&lt;li&gt;How does Go handle memory management?&lt;/li&gt;&#xA;&lt;li&gt;What role does garbage collection play?&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;answers&#34;&gt;&#xA;  Answers:&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#answers&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;h3 id=&#34;1-what-is-dynamic-dispatch&#34;&gt;&#xA;  1. What is dynamic dispatch?&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#1-what-is-dynamic-dispatch&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h3&gt;&#xA;&lt;p&gt;Dynamic dispatch in Go is a key mechanism for implementing runtime polymorphism, particularly through the use of interfaces. Here are some important points about dynamic dispatch in Go:&lt;/p&gt;</description>
     </item>
   </channel>

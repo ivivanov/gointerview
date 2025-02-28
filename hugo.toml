@@ -9,7 +9,7 @@ googleAnalytics = "G-SMC54680CC"
 
 # (Optional) If you provide a Disqus shortname, comments will be enabled on
 # all pages.
-disqusShortname = "golang-interview"
+# disqusShortname = "golang-interview"
 
 # (Optional) Set this to true if you use capital letters in file names
 # disablePathToLower = true
