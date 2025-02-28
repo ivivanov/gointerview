@@ -1,17 +1,27 @@
 +++
 date = '2025-02-28T15:49:40+02:00'
 draft = true
-title = 'Debugging'
+title = 'Testing & Debugging'
 weight = 30
 +++
 
 ## Questions?
+1. What are some best practices for writing unit tests in Go? How do you handle mocking dependencies?
+1. Explain how to use table-driven tests in Go with an example.
 1. How do you debug concurrent code in Go? 
 1. What is pprof and how do you use it to analyze goroutine stacks?
 
 ## Answers:
 
-### 1. How do you debug concurrent code in Go?
+### 1. What are some best practices for writing unit tests in Go? How do you handle mocking dependencies?
+
+---
+
+### 2. Explain how to use table-driven tests in Go with an example.
+
+---
+
+### 3. How do you debug concurrent code in Go?
 Here are some examples of how to debug concurrent code in Go:
 
 - Using Delve debugger:
@@ -100,7 +110,7 @@ These examples demonstrate various techniques for debugging concurrent Go code, 
 
 ---
 
-### 2. What is pprof and how do you use it to analyze goroutine stacks?
+### 4. What is pprof and how do you use it to analyze goroutine stacks?
 `pprof` is a powerful profiling tool for Go programs that allows developers to analyze CPU usage, memory allocations, and goroutine behavior. It's part of the Go standard library and can generate detailed profiles of Go programs. To use pprof for analyzing goroutine stacks:
 #### Enable profiling in your Go program:
 - Import the pprof package: `import _ "net/http/pprof"`
