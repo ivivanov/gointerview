@@ -11,7 +11,6 @@ weight = 20
 1. What is the difference between buffered and unbuffered channels?
 1. When do you use WaitGroup?
 1. When to close a channel?
-1. How would you optimize a web server written in Golang for high performance?
 1. How do goroutines and channels help in leveraging multi-core systems? Provide practical examples.
 
 ## Answers:
@@ -162,48 +161,6 @@ Remember, these practices help prevent common concurrency issues like race condi
 - Closing a channel is primarily the responsibility of the sender, not the receiver
 - It's generally safe to leave a channel open if it's no longer used, as it will be garbage collected
 - Closing a channel with multiple concurrent senders can be problematic and should be approached carefully
-
----
-
-### 6. How would you optimize a web server written in Golang for high performance?
-To optimize a web server written in Golang for high performance, consider the following strategies:
-
-#### Concurrency Optimization
-- Leverage goroutines for concurrent request handling
-- Use connection pooling for database operations to reduce overhead
-- Implement worker pools to manage and reuse goroutines efficiently
-
-#### Memory Management
-- Minimize allocations using zero-allocation techniques
-- Tune the garbage collector (GC) using the GOGC environment variable
-- Profile memory usage to identify and fix leaks
-
-#### Caching and I/O Optimization
-- Implement response caching to reduce database load
-- Use efficient data structures and algorithms
-- Optimize database queries and implement connection pooling
-
-#### Network Optimization
-- Enable HTTP/2 to multiplex requests over a single connection
-- Implement efficient routing using libraries like gorilla/mux
-- Use keep-alive connections to reduce TCP handshake overhead
-
-#### Profiling and Monitoring
-- Use Go's built-in pprof tools for CPU and memory profiling
-- Implement continuous monitoring of key metrics (response time, memory usage, goroutine count)
-- Regularly analyze and optimize based on profiling results
-
-#### System-level Optimizations
-- Increase the GOMAXPROCS value to match available CPU cores
-- Consider using a reverse proxy like Nginx for load balancing
-- Optimize the operating system's network stack settings
-
-#### Best Practices
-- Keep the Go runtime updated to benefit from performance improvements
-- Implement graceful shutdown mechanisms
-- Use benchmarking tools like wrk or Apache Benchmark to test performance under load
-
-Remember that premature optimization can lead to unnecessary complexity. Always profile your application first to identify real bottlenecks before implementing optimizations.
 
 ---
 
