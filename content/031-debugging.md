@@ -1,6 +1,6 @@
 +++
 date = '2025-03-01T10:56:24+02:00'
-draft = true
+draft = false
 title = 'Debugging'
 weight = 31
 +++
