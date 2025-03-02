@@ -8,17 +8,6 @@ weight = 31
 ## Questions?
 1. How do you debug concurrent code in Go? 
 1. What is pprof and how do you use it to analyze goroutine stacks?
-TODO:
-1. How do you use the Delve debugger for Go applications?
-1. What are the key features of Go's built-in pprof profiling tool?
-1. How can you identify and resolve goroutine leaks in a Go program?
-1. What techniques do you use to debug concurrent Go code?
-1. How do you use Go's race detector to find data races?
-1. What strategies do you employ for logging in Go to aid in debugging?
-1. How do you debug memory allocation issues in Go applications?
-1. What tools do you use for performance profiling in Go?
-1. How do you handle and debug panics in Go programs?
-1. What approaches do you take to debug API integrations in Go applications?
 
 ## Answers:
 
