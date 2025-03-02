@@ -9,7 +9,6 @@ title = "Golang Interview Preparation"
 Are you preparing for a Golang developer interview? You've come to the right place! This site is dedicated to helping you ace your Go interview with curated resources, practice questions, and expert tips.
 
 ## Why Prepare with Us?
-
 - Comprehensive coverage of Go concepts
 - Regularly updated content
 - Community-driven and open for contributions
@@ -48,3 +47,9 @@ If you're already familiar with Golang, feel free to dive straight into our comp
 Ready to kickstart your preparation? Explore our practice questions in the section to the left!
 
 Remember, consistent practice and a solid understanding of Go's core concepts are key to interview success. Happy coding!
+
+[![Static Badge](https://img.shields.io/badge/Github-black?logo=github&link=https%3A%2F%2Fgithub.com%2Fivivanov%2Fgointerview)](https://github.com/ivivanov/gointerview)
+![GitHub deployments](https://img.shields.io/github/deployments/ivivanov/gointerview/github-pages?label=deployment)
+![GitHub last commit](https://img.shields.io/github/last-commit/ivivanov/gointerview)
+![GitHub License](https://img.shields.io/github/license/ivivanov/gointerview)
+![GitHub contributors](https://img.shields.io/github/contributors/ivivanov/gointerview)
