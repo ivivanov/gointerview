@@ -7,7 +7,8 @@ weight = 31
 
 ## Questions?
 1. How do you debug concurrent code in Go? 
-1. What is pprof and how do you use it to analyze goroutine stacks?
+1. What is `pprof`? Name few key features.
+1. How do you use `pprof` to analyze goroutine stacks?
 
 ## Answers:
 
@@ -100,16 +101,31 @@ These examples demonstrate various techniques for debugging concurrent Go code, 
 
 ---
 
-### 2. What is pprof and how do you use it to analyze goroutine stacks?
-`pprof` is a powerful profiling tool for Go programs that allows developers to analyze CPU usage, memory allocations, and goroutine behavior. It's part of the Go standard library and can generate detailed profiles of Go programs. To use pprof for analyzing goroutine stacks:
+### 2. What is `pprof`? Name few key features.
+`pprof` is a powerful profiling tool for Go programs that allows developers to analyze CPU usage, memory allocations, and goroutine behavior. It's part of the Go standard library and can generate detailed profiles of Go programs.  Key features of pprof include:
+- ***CPU profiling:*** Collects CPU usage data to identify time spent in different parts of the application
+- ***Memory profiling:*** Records heap allocations to monitor memory usage and detect potential leaks
+- ***Block profiling:*** Identifies locations where goroutines block or wait for synchronization
+- ***Mutex profiling:*** Reports on mutex contention in the application
+- ***Visualization capabilities:*** Generates both text and graphical reports for analysis
+- ***HTTP server integration:*** Can serve profiling data via HTTP for easy access
+- ***Symbolization:*** Can translate machine addresses to human-readable function names and line numbers
+- ***Comparison and aggregation:*** Allows comparing or combining multiple profiles for analysis
+- ***Customizable reporting:*** Offers options to adjust granularity (e.g., functions, files, lines) and sorting of results
+
+---
+
+### 3. How do you use `pprof` to analyze goroutine stacks?
+To use pprof for analyzing goroutine stacks:
+
 #### Enable profiling in your Go program:
 - Import the pprof package:*** `import _ "net/http/pprof"`
 - Start an HTTP server:*** 
-```go
-go func() {
-    log.Println(http.ListenAndServe("localhost:1414", nil))
-}()
-```
+	```go
+	go func() {
+		log.Println(http.ListenAndServe("localhost:1414", nil))
+	}()
+	```
 
 #### Generate a goroutine profile:
 - Access the pprof endpoint:*** `http://localhost:1414/debug/pprof/goroutine?debug=2`
@@ -125,7 +141,5 @@ go func() {
 
 #### Visualize the data:
 - pprof can generate various reports, including CPU usage summaries, memory allocation details, and flame graphs
-
-By using pprof to analyze goroutine stacks, developers can identify issues such as goroutine leaks, deadlocks, and performance bottlenecks in their Go programs.
 
 ---
