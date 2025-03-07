@@ -9,6 +9,8 @@ weight = 31
 1. How do you debug concurrent code in Go? 
 1. What is `pprof`? Name few key features.
 1. How do you use `pprof` to analyze goroutine stacks?
+1. What are the usual challenges debugging production-grade applications?
+1. How do you debug and resolve production issues?
 
 ## Answers:
 
@@ -141,5 +143,60 @@ To use pprof for analyzing goroutine stacks:
 
 #### Visualize the data:
 - pprof can generate various reports, including CPU usage summaries, memory allocation details, and flame graphs
+
+---
+
+### 4. What are the usual challenges debugging production-grade applications?
+Debugging production-grade applications presents several challenges:
+
+- ***Infrastructures:*** Distributed systems, serverless architectures, and microservices make it difficult to trace issues to their source
+- ***Limited visibility:*** Modern infrastructures often reduce visibility into software behavior, making it harder to understand and debug production environments
+- ***Remote debugging:*** When issues occur in production, developers may not have direct access to the local environment. Debugging in production can potentially disrupt current users, slow down application performance, or even crash the app
+- ***Data differences:*** Production environments often use different datasets than development or QA, leading to unforeseen issues
+- ***Reproducing issues:*** It can be challenging to replicate production problems in local or staging environments
+- ***Log analysis:*** Sifting through numerous log files to find relevant data is time-consuming and may require writing additional logs and redeploying the application
+- ***Unpredictable bugs:*** Some bugs may manifest in unexpected ways, making them difficult to pinpoint and resolve
+- ***Balancing speed and quality:*** Developers must maintain equilibrium between quick fixes and thorough, high-quality solutions
+
+---
+
+### 5. How do you debug and resolve production issues?
+To debug and resolve production issues effectively, follow these key steps:
+
+1. Steps to reproduce
+	- Gather context from user reports, error descriptions, and logs
+	- Define conditions under which the issue occurs
+	- Set up a test environment to recreate production-like conditions
+
+2. Logs and metrics
+	- Examine application, server, and infrastructure logs
+	- Use monitoring tools to identify anomalies in system health parameters
+	- Compare data before, during, and after the issue
+
+3. Root cause analysis
+	- Generate hypotheses based on collected data
+	- Test hypotheses through controlled experiments
+	- Trace code paths and analyze dependencies
+
+4. Collaborate
+	- Involve relevant stakeholders - Devs, QAs, DevOps
+	- Assign clear roles and responsibilities
+
+5. Implement fix
+	- Develop a solution addressing the root cause
+	- Conduct thorough peer reviews and testing
+	- Deploy gradually using techniques like canary releases
+	- Monitor closely post-deployment for regressions
+
+6. Document
+	- Record findings and decisions made during the process
+	- Conduct post-mortem discussions to identify process improvements
+	- Update documentation and implement preventive measures
+
+7. Follow good practices 
+	- Use logging frameworks for detailed insights
+	- Implement proper error handling and logging in the codebase
+	- Utilize production debugging tools for real-time monitoring and analysis
+	- Have a well-versed production debugging team ready to respond quickly
 
 ---
