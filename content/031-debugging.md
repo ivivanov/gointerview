@@ -2,6 +2,7 @@
 date = '2025-03-01T10:56:24+02:00'
 draft = false
 title = 'Debugging'
+slug = 'debugging'
 weight = 31
 +++
 

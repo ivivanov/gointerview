@@ -2,7 +2,8 @@
 date = '2025-02-27T14:52:32+02:00'
 draft = false
 title = 'Advanced Concepts'
-weight = 40
+slug = 'advanced-concepts'
+weight = 50
 +++
 
 ## Questions?

@@ -1,7 +1,7 @@
 +++
 date = '2025-02-23T12:21:55+02:00'
 draft = false
-title = "Golang Interview Preparation"
+title = 'Golang Interview Preparation'
 +++
 
 ![Gopher](/gopher.png "Gopher")

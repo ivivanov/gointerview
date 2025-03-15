@@ -2,6 +2,7 @@
 date = '2025-02-22T14:29:46+02:00'
 draft = false
 title = 'Basics'
+slug = 'basics'
 weight = 10
 +++
 
