@@ -30,7 +30,7 @@ weight = 40
 
 
 ---
-
+### 1. How would you close gracefully a channel with multiple senders?
 ### 5. How would you implement graceful shutdown of multiple goroutines?
 To implement graceful shutdown of multiple goroutines in Go, follow this structured approach using context cancellation and synchronization primitives:
 
