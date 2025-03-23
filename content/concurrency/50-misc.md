@@ -10,6 +10,7 @@ weight = 50
 1. When do you use WaitGroup?
 1. What is errgroup package used for?
 1. How do goroutines and channels help in leveraging multi-core systems? Provide practical examples.
+1. What is the purpose of the `select` statement in Go, and how is it used with channels?
 
 TODOs:
 1. What is deadlock. Can write an example of deadlock?
@@ -239,3 +240,118 @@ This worker pool example demonstrates how channels can distribute work across mu
 By using goroutines and channels, Go programs can effectively parallelize tasks, improving performance on multi-core systems while maintaining clear and manageable code structure.
 
 ---
+
+## 4. What is the purpose of the `select` statement in Go, and how is it used with channels?
+The `select` statement in Go is a powerful concurrency control mechanism designed to handle multiple channel operations simultaneously. Its primary purpose is to allow a goroutine to wait on and respond to multiple channel communications efficiently. Here's a detailed breakdown:
+
+### **Purpose of `select`**
+1. **Multiplex Channel Operations**: Enables a goroutine to wait for and process the first available communication among multiple channels.
+2. **Non-Blocking Communication**: With `default`, it performs non-blocking operations when no channels are ready.
+3. **Synchronization**: Coordinates communication between goroutines by executing cases as channels become ready.
+
+---
+
+### **Syntax & Usage**
+The `select` statement resembles a `switch` but works exclusively with channels:
+```go
+select {
+case msg1 := <-channel1:
+    // Handle data from channel1
+case channel2 <- data:
+    // Send data to channel2
+case <-time.After(1 * time.Second):
+    // Timeout after 1 second
+default:
+    // Execute if no channels are ready (non-blocking)
+}
+```
+
+---
+
+### **Key Behaviors**
+1. **Blocking Behavior**:
+   - Without `default`, `select` blocks indefinitely until one of its cases is ready.
+   - Example:
+     ```go
+     select {
+     case v := <-ch1: // Blocks until ch1 has data
+         fmt.Println(v)
+     case ch2 <- 42:  // Blocks until ch2 can receive
+     }
+     ```
+
+2. **Non-Blocking with `default`**:
+   - Immediately executes `default` if no channels are ready:
+     ```go
+     select {
+     case v := <-ch:
+         fmt.Println(v)
+     default:
+         fmt.Println("No data received")
+     }
+     ```
+
+3. **Random Selection**:
+   - If multiple cases are ready simultaneously, one is chosen **randomly** to ensure fairness:
+     ```go
+     ch1, ch2 := make(chan int), make(chan int)
+     go func() { ch1 <- 1 }()
+     go func() { ch2 <- 2 }()
+     
+     select {
+     case v := <-ch1: // Randomly selected if both ch1 and ch2 are ready
+         fmt.Println(v)
+     case v := <-ch2:
+         fmt.Println(v)
+     }
+     ```
+
+---
+
+### **Common Use Cases**
+1. **Timeouts**:
+   ```go
+   select {
+   case res := <-apiCall:
+       fmt.Println(res)
+   case <-time.After(3 * time.Second):
+       fmt.Println("Request timed out")
+   }
+   ```
+
+2. **Event Loops**:
+   ```go
+   for {
+       select {
+       case job := <-jobs:
+           process(job)
+       case <-shutdown:
+           return
+       }
+   }
+   ```
+
+3. **Priority Channels**:
+   ```go
+   select {
+   case highPri := <-highPriorityChan: // Check high-priority first
+       handleHighPri(highPri)
+   default:
+       select {
+       case lowPri := <-lowPriorityChan: // Fallback to low-priority
+           handleLowPri(lowPri)
+       }
+   }
+   ```
+
+---
+
+### **Best Practices**
+- **Avoid Empty `select{}`**: This blocks forever (useful for preventing `main` from exiting).
+- **Close Handling**: Use `_, ok := <-ch` in cases to detect closed channels.
+- **Combine with `for`**: Often used in loops to continuously process channel events.
+
+By leveraging `select`, you can write efficient, readable concurrent code that elegantly handles complex channel interactions.
+
+---
+
