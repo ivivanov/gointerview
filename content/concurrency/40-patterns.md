@@ -6,6 +6,9 @@ slug = 'patterns'
 weight = 40
 +++
 
+# Efficient Concurrent Go
+*Design Pattern Questions for Tech Interviews*
+
 ## Questions?
 1. What concurrency design patterns are you familiar with?
 1. Worker Pool

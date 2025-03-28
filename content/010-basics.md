@@ -6,6 +6,9 @@ slug = 'basics'
 weight = 10
 +++
 
+# Go Programming Basics
+*Must-Know Concepts for Newcomers*
+
 ## Questions?
 1. What are Go interfaces, and why are they important?
 1. How do you implement polymorphism in Go?

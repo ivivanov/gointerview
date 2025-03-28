@@ -6,6 +6,9 @@ slug = 'goroutines'
 weight = 20
 +++
 
+# Go's Lightweight Threads
+*Goroutine Questions for Tech Interviews*
+
 ## Questions?
 1. What is a goroutine, and how does it differ from a thread?
 1. What happens if the main function finishes execution before a goroutine completes?

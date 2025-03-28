@@ -6,6 +6,9 @@ slug = 'debugging'
 weight = 31
 +++
 
+# Debugging in Go
+*Key Questions for Effective Troubleshooting*
+
 ## Questions?
 1. How do you debug concurrent code in Go? 
 1. What is `pprof`? Name few key features.

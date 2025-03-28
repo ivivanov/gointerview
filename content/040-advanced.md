@@ -1,10 +1,12 @@
 +++
 date = '2025-02-27T14:52:32+02:00'
 draft = false
-title = 'Advanced Concepts'
-slug = 'advanced-concepts'
+title = 'Advanced'
+slug = 'advanced'
 weight = 50
 +++
+
+# Advanced Go Concepts & Topics
 
 ## Questions?
 1. What is dynamic dispatch?

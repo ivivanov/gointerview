@@ -6,6 +6,9 @@ slug = 'channels'
 weight = 30
 +++
 
+# Channels Deep Dive
+*Navigating Go's Communication Primitives*
+
 ## Questions?
 1. Explain the concept of channels in Go. When and why would you use them?
 1. What is the difference between buffered and unbuffered channels?
