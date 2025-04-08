@@ -6,7 +6,8 @@ slug = 'advanced'
 weight = 50
 +++
 
-# Advanced Go Concepts & Topics
+# Deep Dive into Go
+*Advanced Go Concepts & Topics*
 
 ## Questions?
 1. What is dynamic dispatch?
