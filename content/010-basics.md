@@ -10,6 +10,9 @@ weight = 10
 *Must-Know Concepts for Newcomers*
 
 ## Questions?
+1. What is Go, and what types of projects is it best suited for?
+1. Explain Go’s type system and how it differs from other popular languages.
+1. Explain pass-by-value semantics and how reference types work in Go.
 1. What are Go interfaces, and why are they important?
 1. How do you implement polymorphism in Go?
 1. What’s the difference between `nil` interfaces and empty interfaces in Go? How do you handle type assertions safely?
@@ -18,7 +21,73 @@ weight = 10
 
 ## Answers:
 
-### 1. What are Go interfaces, and why are they important?
+### 1. What is Go, and what types of projects is it best suited for?
+
+Go, also known as Golang, is a statically typed, compiled language designed for simplicity, performance, and strong concurrency support. It excels in scenarios requiring high efficiency and scalability. Some of the key areas where Go shines include:
+
+- ***Web servers, microservices, and APIs:*** Go's standard library provides powerful tools for building HTTP servers and clients, making it ideal for backend development
+- ***Cloud-native and distributed systems:*** Its lightweight design and scalability make Go a natural fit for creating containerized applications and deploying them in cloud environments
+- ***DevOps tools and infrastructure:*** Tools like Docker and Kubernetes are written in Go due to its speed, portability, and ease of deployment
+
+---
+
+### 2. Explain Go’s type system and how it differs from other popular languages.
+
+Go features a statically typed system, meaning variable types are determined at compile time. This ensures predictability and reduces the risk of runtime errors, making it distinct from dynamically typed languages. Key differences include:
+
+- ***No class-based inheritance:*** Instead of traditional object-oriented programming with classes, Go relies on interfaces and composition for structuring code. This approach is simpler and promotes flexibility
+- ***Strong typing:*** Go enforces strict type rules, requiring explicit conversions between types, unlike languages like JavaScript where implicit type coercion is common. While Go doesn’t support advanced type features like sum types, it introduced generics in version 1.18 to enhance type safety and flexibility.
+
+---
+
+### 3. Explain pass-by-value semantics and how reference types work in Go.
+
+In Go, all variables are **passed by value**. This means when you pass a variable to a function, Go creates a copy of that variable. However, the behavior differs between **value types** (e.g., integers, structs) and **reference types** (e.g., slices, maps, channels) due to how they store data. For Value Types (int, float, bool, string, structs and arrays) a full copy of the data is made.
+
+#### Reference Types (Slices, Maps, Channels)
+
+Reference types internally hold a **pointer to an underlying data structure**. When passed to a function:
+- The **header** (e.g., slice length/capacity, map pointer) is copied.
+- The **underlying data** is shared.
+- **Slices**: The slice header (pointer to array + length/capacity) is copied, but both headers point to the same array
+- **Maps**: The map header (pointer to hash table) is copied, but both point to the same data.
+
+| Operation | Affects Original? | Why |
+| :-- | :-- | :-- |
+| Modify elements | Yes | Shared underlying data (array, hash table, etc.) |
+| Reassign variable | No | Only modifies the local copy of the header |
+| Append/resize | No* | Creates new data for local copy (unless returned and reassigned) |
+
+
+#### When to Use Pointers
+
+Use pointers explicitly to:
+
+1. Modify the header (e.g., slice length/capacity):
+
+```go
+func growSlice(s *[]int) {
+    *s = append(*s, 100)
+}
+```
+
+2. Avoid copying large structs:
+
+```go
+func processBigStruct(b *BigStruct) { ... }
+```
+
+#### **Key Takeaways**
+- Go **always** passes copies of variables
+- Reference types (slices, maps, channels) share underlying data but have isolated headers
+- To modify headers (e.g., slice length), return the modified value or use pointers
+- Changes to **elements** are visible globally; changes to **headers** are local
+
+This design balances efficiency (no deep copying) with safety (no unintended side effects from header changes).
+
+---
+
+### 4. What are Go interfaces, and why are they important?
 Go interfaces are collections of method signatures that define a set of behaviors for types. They are important for several reasons:
 - ***Polymorphism:*** Interfaces enable polymorphic behavior, allowing different types to be used interchangeably as long as they implement the required methods
 - ***Decoupling:*** Interfaces help reduce dependencies between different parts of the codebase, promoting more modular and flexible designs
@@ -33,7 +102,7 @@ Interfaces in Go provide a powerful tool for creating clean, modular, and extens
 
 ---
 
-### 2. How do you implement polymorphism in Go?
+### 5. How do you implement polymorphism in Go?
 Go implements polymorphism primarily through interfaces, without using generics. This approach is known as runtime polymorphism. Here are the key ways to achieve it:
 
 - ***Interface-based polymorphism***: Define interfaces that specify a set of methods, then implement these interfaces in different types. This allows for flexible code that can work with any type adhering to the interface contract
@@ -46,7 +115,7 @@ These techniques allow Go to support polymorphism without the need for generics,
 
 ---
 
-### 3. What’s the difference between `nil` interfaces and empty interfaces in Go? How do you handle type assertions safely?
+### 6. What’s the difference between `nil` interfaces and empty interfaces in Go? How do you handle type assertions safely?
 The difference between `nil` interfaces and empty interfaces in Go is subtle but important:
 
 #### Nil interfaces
@@ -94,7 +163,7 @@ These methods help prevent panics and provide safer type conversions when workin
 
 ---
 
-### 4. What are variadic functions in Go, and when should they be used?
+### 7. What are variadic functions in Go, and when should they be used?
 Variadic functions in Go are functions that can accept a variable number of arguments of the same type. They are defined using an ellipsis (...) before the type of the last parameter in the function signature.
 
 Key characteristics of variadic functions:
