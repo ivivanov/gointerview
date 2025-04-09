@@ -14,7 +14,7 @@ weight = 40
 1. Worker Pool
 1. Fan-Out/Fan-In
 1. What are the key differences between "fan-out/fan-in" and "worker pool"  patterns?
-
+1. Pipeline
 
 ## Answers:
 
@@ -121,10 +121,10 @@ func main() {
 1. Workers process jobs concurrently.
     - Send results to `results` channel
     - Exit when jobs channel closes
-4. After all jobs complete:
+1. After all jobs complete:
    - Workers exit via closed jobs channel
    - Results channel closes
-5. Main collects and prints results.
+1. Main collects and prints results.
     - `sync.WaitGroup` ensures main waits for worker completion
     - Closing channels signals completion:
         - `close(jobs)` triggers worker exit
@@ -273,5 +273,135 @@ The key differences between the "fan-out/fan-in" pattern and the "worker pool" p
    - Worker pool: May require more setup but offers better long-term scalability.
 
 Both patterns can be used for concurrent processing, and the choice depends on specific application requirements and resource constraints.
+
+---
+
+### 5. Producer-Consumer
+
+The producer-consumer pattern is a concurrency design pattern where one or more producer threads generate data or tasks, and one or more consumer threads process or execute them. This pattern uses a shared queue as an intermediary, allowing producers and consumers to work independently and at different rates. It helps decouple data production from consumption, enables efficient workload distribution, and facilitates resource management in concurrent systems.
+
+#### Problems Solved
+- ***Concurrent Access:*** Prevents race conditions when multiple producers/consumers access shared resources
+- ***Rate Mismatch:*** Buffers data when production and consumption speeds differ
+- ***Resource Management:*** Avoids overwhelming systems by limiting concurrent processing (backpressure)
+- ***Decoupling:*** Separates data generation logic from processing logic
+
+#### Key Advantages
+- ***Modularity:*** Producers and consumers operate independently
+- ***Scalability:*** Easily add more producers/consumers without redesign
+- ***Efficiency:*** Enables parallel processing and load balancing
+- ***Backpressure Handling:*** Prevents system overload via bounded buffers
+
+#### Common Use Cases
+- ***Real-Time Data:*** Stock tickers, sensor data processing
+- ***Task Queues:*** Web servers handling HTTP requests
+- ***Logging Systems:*** Aggregating logs from multiple sources
+- ***Distributed Systems:*** Asynchronous communication between microservices
+
+---
+
+### 6. Pipeline
+
+The pipeline pattern is a concurrency design pattern used to process data sequentially through multiple stages, where each stage performs a specific operation and passes the result to the next stage via channels. It enables efficient and modular data processing.
+
+#### Problems Solved by the Pattern
+- ***Sequential Data Processing:*** Handles multi-step workflows where data needs to be transformed or processed in stages
+- ***Concurrency:*** Allows multiple stages to run concurrently, improving performance
+- ***Decoupling:*** Separates logic for each stage, making the code more modular and easier to maintain
+- ***Scalability:*** Efficiently processes large datasets by leveraging parallelism
+
+#### Key Advantages
+- ***Modularity:*** Each stage is independent, making it easy to add, remove, or modify stages without affecting the rest of the pipeline
+- ***Concurrent Execution:*** Multiple stages can operate simultaneously, reducing overall processing time
+- ***Improved Throughput:*** Enables efficient use of CPU and I/O resources by processing data in parallel
+- ***Error Handling:*** Errors can be isolated and handled at specific stages without affecting others
+
+#### Common Use Cases
+- ***ETL (Extract, Transform, Load):*** Processing and transforming large datasets
+- ***Image or Video Processing Pipelines:*** Sequential operations like resizing, filtering, and saving images
+- ***Text Analysis:*** Tokenization, filtering, and sentiment analysis of text data
+- ***Financial Data Analysis:*** Sequential calculations on large streams of financial data
+- ***Log Processing:*** Filtering, transforming, and aggregating logs in real-time
+
+#### Example:
+
+```go
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+func produce(num int) <-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for i := 0; i < num; i++ {
+			out <- rand.Intn(100) // Generate random numbers
+		}
+	}()
+	return out
+}
+
+func double(input <-chan int) <-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for value := range input {
+			out <- value * 2 // Double the value
+		}
+	}()
+	return out
+}
+
+func filterGt10(input <-chan int) <-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for value := range input {
+			if value > 10 { // Filter values greater than 10
+				out <- value
+			}
+		}
+	}()
+	return out
+}
+
+func main() {
+	rand.Seed(time.Now().UnixNano())    // Seed random number generator
+	numbersCh := produce(10)            // Stage 1: Generate random numbers
+	doubledCh := double(numbersCh)      // Stage 2: Double the numbers
+	filteredCh := filterGt10(doubledCh) // Stage 3: Filter numbers greater than 10
+	for value := range filteredCh {     // Stage 4: Print the final output
+		fmt.Printf("Value is %d\n", value)
+	}
+}
+
+```
+
+#### Code Flow Explanation
+
+1. Stage Initialization:
+    - Each stage is implemented as a function that takes an input channel and returns an output channel
+    - Goroutines are used to execute each stage concurrently
+1. Data Flow:
+    - Data flows through the pipeline via channels
+    - Each stage processes its input and sends results to the next stage
+1. Termination:
+    - Channels are closed when a stage finishes processing all input data (`defer close(out)`)
+    - Closing channels signals downstream stages to stop reading
+1. Final Output:
+    - The final stage 4 consumes the filtered values from stage 3 and displays them
+
+
+#### Best Practices When Coding
+- Always close output channels when a stage finishes processing (`defer close(out)`)
+- If stages have varying speeds, use buffered channels to prevent blocking fast producers or slow consumers
+- Use a custom struct (e.g., `Result { Value int, Err error }`) to propagate errors through the pipeline without panicking
+- Use `context.Context` or a `done` channel to signal goroutines to exit early during errors or shutdowns.
+- Identify slow stages and parallelize them using Fan-Out/Fan-In patterns if needed
+- Each stage should be designed as an isolated unit for easier testing and debugging
 
 ---
