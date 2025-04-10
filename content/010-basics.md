@@ -18,6 +18,7 @@ weight = 10
 1. What’s the difference between `nil` interfaces and empty interfaces in Go? How do you handle type assertions safely?
 1. What are variadic functions in Go, and when should they be used?
 1. What is the `iota` keyword, and how is it used in Go?
+1. Compare slices vs arrays
 
 ## Answers:
 
@@ -88,12 +89,29 @@ This design balances efficiency (no deep copying) with safety (no unintended sid
 ---
 
 ### 4. What are Go interfaces, and why are they important?
+
+Go's interfaces provide a unique form of type abstraction, distinct from those in languages like Java. In Go, interfaces are ***implicitly implemented***, meaning a type satisfies an interface simply by implementing its methods, without needing to explicitly declare that it implements the interface. Go embraces the philosophy of "duck typing": ***if it quacks like a duck, then it’s a duck***. If a type provides all the methods defined by an interface, it is considered to implement that interface. This approach allows for highly dynamic and adaptable code.
+
+```go
+type Reader interface {
+    Read(p []byte) (n int, err error)
+}
+
+type MyReader struct{}
+
+func (m MyReader) Read(p []byte) (n int, err error) {
+    // implementation
+}
+```
+
+In this example, `MyReader` implicitly implements the `Reader` interface because it defines the `Read` method. No explicit declaration is required.
+
 Go interfaces are collections of method signatures that define a set of behaviors for types. They are important for several reasons:
+- ***Implicit Implementation:*** This design makes Go's interfaces lightweight and highly flexible, encouraging loose coupling and simplifying code maintenance.
 - ***Polymorphism:*** Interfaces enable polymorphic behavior, allowing different types to be used interchangeably as long as they implement the required methods
 - ***Decoupling:*** Interfaces help reduce dependencies between different parts of the codebase, promoting more modular and flexible designs
 - ***Code reusability:*** By using interfaces, developers can write more generic code that works with any type implementing the interface, reducing code duplication
 - ***Testing:*** Interfaces make it easier to create mock objects for unit testing, improving testability of code
-- ***Implicit implementation:*** Go's interfaces are implemented implicitly, meaning types don't need to explicitly declare which interfaces they implement. This reduces complexity and allows for more flexible designs
 - ***Composition over inheritance:*** Interfaces in Go encourage composition rather than hierarchical inheritance, leading to more flexible and maintainable code structures
 - ***Late abstraction:*** Go's interface design allows developers to define abstractions as they become apparent, rather than forcing early decisions about type hierarchies.
 - ***Reflection and type assertions:*** Interfaces enable runtime type inspection and manipulation through reflection and type assertions.
@@ -233,5 +251,38 @@ const (
 ```
 
 Using `iota` simplifies the creation of related constants, making the code more maintainable and less prone to errors when defining sequences of values.
+
+---
+
+### 9. Compare slices vs arrays
+Slices in Go are a flexible and dynamic way to work with collections of elements. They are far more common in application code than arrays due to their versatility and dynamic nature. Here’s how slices differ from arrays:
+
+#### Dynamic Size
+
+Unlike arrays, slices can grow or shrink dynamically. They act as references to an underlying array, allowing operations like resizing without needing to define a fixed size upfront. This makes slices more adaptable for scenarios where the number of elements is not known beforehand.
+
+```go
+arr := [5]int{1, 2, 3, 4, 5} // Array with fixed size
+slc := arr[:3]               // Slice referencing the first 3 elements
+```
+
+#### Underlying Array
+
+Slices do not store data themselves; instead, they point to an underlying array. This design makes them efficient for passing large collections of data between functions without copying the entire dataset.
+
+For example:
+
+```go
+func modify(s []int) {
+    s[0] = 99 // Modifies the shared underlying array
+}
+
+arr := [5]int{1, 2, 3, 4, 5}
+slc := arr[:]
+modify(slc)
+fmt.Println(arr) // Output: [99 2 3 4 5]
+```
+
+Slices are lightweight and powerful tools in Go, enabling dynamic operations while maintaining efficiency through shared memory with their backing arrays.
 
 ---
