@@ -11,6 +11,7 @@ weight = 40
 
 ## Questions?
 1. What concurrency design patterns are you familiar with?
+1. Generator
 1. Worker Pool
 1. Fan-Out/Fan-In
 1. What are the key differences between "fan-out/fan-in" and "worker pool"  patterns?
@@ -19,11 +20,11 @@ weight = 40
 ## Answers:
 
 ### 1. What concurrency design patterns are you familiar with?
+- ***Generator:*** Functions that return channels
 - ***Worker Pool:*** Managing task execution across multiple goroutines
 - ***Fan-Out/Fan-In:*** Distributing tasks and collecting results
 - ***Producer-Consumer:*** Decoupling data production from consumption via buffer
 - ***Pipeline:*** Processing data in stages
-- ***Generator:*** Functions that return channels
 - ***Multiplexing:*** Combining multiple channels
 - ***Timeout:*** Adding time limits to goroutine execution
 - ***Quit Signal:*** Gracefully stopping goroutines
@@ -33,7 +34,66 @@ weight = 40
 
 ---
 
-### 2. Worker Pool
+### 2. Generator
+
+The Generator pattern in Go uses goroutines and channels to produce data streams on demand, enabling lazy, concurrent value generation. It’s ideal for efficiently iterating over large or infinite sequences without blocking or excessive memory use.
+
+#### Problems Solved by the Pattern
+
+- **Efficient memory usage** for large/infinite datasets through lazy evaluation
+- **Encapsulation** of complex data generation logic
+- **Concurrent data production** without blocking consumers
+- **Simplified iteration** over asynchronous data streams
+
+
+#### Key Advantages
+
+- ***Lazy Evaluation:*** Values generate only when requested
+- ***Concurrency Safety:*** Built-in channel synchronization
+- ***Composability:*** Easy integration with pipelines and other patterns
+- ***Resource Control:*** Clean termination via channel closure
+
+#### Example
+
+```go
+func oddsGenerator(max int) <-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for i := 1; i <= max; i += 2 {
+			out <- i
+		}
+	}()
+
+	return out
+}
+
+func main() {
+	for num := range oddsGenerator(10) {
+		fmt.Println(num)
+	}
+}
+```
+
+
+#### Code Flow Explanation
+
+1. ***Channel Creation:*** `make(chan int)` creates unbuffered channel
+1. ***Goroutine Launch:*** Anonymous function starts concurrent execution
+1. ***Channel Closure:*** `defer close(out)` signals completion from the sender fn
+1. ***Value Production:*** Loop sends odd numbers via `out <- i`
+1. ***Consumption:*** Main function receives values using `range`
+
+#### Example Use Cases
+
+- Streaming I/O operations (file processing)
+- Simulating real-time data feeds (sensor data)
+- Implementing concurrent iterators
+- Test data generation
+
+---
+
+### 3. Worker Pool
 
 The worker pool pattern is a concurrency design that manages a fixed number of worker goroutines to process tasks from a shared queue. It efficiently handles large numbers of independent tasks while controlling resource usage. Workers continuously pull tasks, process them concurrently, and send results to an output queue. This pattern prevents system overload, improves performance through parallel processing, and maintains predictable resource utilization, making it ideal for scenarios like batch operations or API request handling.
 
@@ -139,7 +199,7 @@ func main() {
 
 ---
 
-### 3. Fan-Out/Fan-In
+### 4. Fan-Out/Fan-In
 
 The fan-out/fan-in pattern is a concurrency design used to parallelize and coordinate tasks. In the fan-out stage, a single task is divided into smaller subtasks executed concurrently by multiple goroutines. The fan-in stage collects and combines results from all subtasks. This pattern improves performance by distributing workload across goroutines, enabling parallel processing. It's implemented using goroutines and channels in Go, making it efficient for handling large-scale, divisible tasks.
 
@@ -248,7 +308,7 @@ func main() {
 
 ---
 
-### 4. What are the key differences between "fan-out/fan-in" and "worker pool"  patterns?
+### 5. What are the key differences between "fan-out/fan-in" and "worker pool"  patterns?
 
 The key differences between the "fan-out/fan-in" pattern and the "worker pool" pattern are:
 
@@ -276,7 +336,7 @@ Both patterns can be used for concurrent processing, and the choice depends on s
 
 ---
 
-### 5. Producer-Consumer
+### 6. Producer-Consumer
 
 The producer-consumer pattern is a concurrency design pattern where one or more producer threads generate data or tasks, and one or more consumer threads process or execute them. This pattern uses a shared queue as an intermediary, allowing producers and consumers to work independently and at different rates. It helps decouple data production from consumption, enables efficient workload distribution, and facilitates resource management in concurrent systems.
 
@@ -300,7 +360,7 @@ The producer-consumer pattern is a concurrency design pattern where one or more 
 
 ---
 
-### 6. Pipeline
+### 7. Pipeline
 
 The pipeline pattern is a concurrency design pattern used to process data sequentially through multiple stages, where each stage performs a specific operation and passes the result to the next stage via channels. It enables efficient and modular data processing.
 
