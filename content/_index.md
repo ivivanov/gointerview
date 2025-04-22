@@ -44,6 +44,10 @@ If you're already familiar with Golang, feel free to dive straight into our comp
 - [Go Ask the Experts](https://changelog.com/goask)
 - [Cup o' Go](https://cupogo.dev/)
 
+### Talks
+
+- [Go Concurrency Patterns](http://www.youtube.com/watch?v=f6kdp27TYZs) by Rob Pike (Google I/O)
+
 Ready to kickstart your preparation? Explore our practice questions in the section to the left!
 
 Remember, consistent practice and a solid understanding of Go's core concepts are key to interview success. Happy coding!
