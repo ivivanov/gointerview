@@ -12,6 +12,7 @@ weight = 40
 ## Questions?
 1. What concurrency design patterns are you familiar with?
 1. Generator
+1. Timeout, Quit signal & Context
 1. Worker Pool
 1. Fan-Out/Fan-In
 1. What are the key differences between "fan-out/fan-in" and "worker pool"  patterns?
@@ -21,15 +22,15 @@ weight = 40
 
 ### 1. What concurrency design patterns are you familiar with?
 - ***Generator:*** Functions that return channels
+- ***Timeout:*** Adding time limits to goroutine execution
+- ***Quit Signal:*** Gracefully stopping goroutines
+- ***Context:*** Managing cancellation and deadlines across goroutines
 - ***Worker Pool:*** Managing task execution across multiple goroutines
 - ***Fan-Out/Fan-In:*** Distributing tasks and collecting results
 - ***Producer-Consumer:*** Decoupling data production from consumption via buffer
 - ***Pipeline:*** Processing data in stages
 - ***Multiplexing:*** Combining multiple channels
-- ***Timeout:*** Adding time limits to goroutine execution
-- ***Quit Signal:*** Gracefully stopping goroutines
 - ***Bounded Parallelism:*** Limiting concurrent execution
-- ***Context:*** Managing cancellation and deadlines across goroutines
 - ***Semaphore:*** Controlling access to shared resources
 
 ---
@@ -93,7 +94,89 @@ func main() {
 
 ---
 
-### 3. Worker Pool
+### 3. Timeout, Quit signal & Context
+Timeout, quit signal, and context patterns in Go coordinate cancellation, timeouts, and graceful shutdowns for concurrent operations. The `select` statement enables responsive handling of these events by waiting on multiple channels simultaneously.
+
+#### Useful for:
+- Preventing indefinite blocking by enforcing timeouts
+- Enables graceful shutdown on user or system quit signals
+- Propagates cancellation across goroutines for resource cleanup
+- Handles multiple cancellation sources (timeout, quit, manual) efficiently
+
+#### Key Advantages
+- Centralized, responsive control over goroutine lifecycles
+- Clean resource management and predictable shutdown
+- Simple, readable mechanism for handling multiple asynchronous events
+
+#### Example without context
+
+```go
+
+func main() {
+	// Create context with program timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	// Capture OS signals for graceful shutdown
+	quit := make(chan os.Signal, 1)
+	defer close(quit)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+
+	// Long running task
+	msgC := oddsGenerator(ctx, 6)
+
+	// Block the main goroutine
+	for {
+		select {
+		case message, ok := <-msgC:
+			if !ok { // channel is closed
+				fmt.Println("Jobs done!")
+				return
+			}
+			fmt.Println(message)
+		case <-quit:
+			fmt.Printf("\nQuit by user")
+			return
+		// We are timing each message
+		// If we have not received msg within specific time
+		case <-time.After(500 * time.Millisecond):
+			fmt.Println("Can't wait that long!")
+			return
+		}
+	}
+}
+
+func oddsGenerator(ctx context.Context, max int) <-chan string {
+	msgC := make(chan string)
+	go func() {
+		defer close(msgC)
+
+		for i := 1; i <= max; i += 2 {
+			select {
+			case <-ctx.Done():
+				fmt.Println("Execution timeout...")
+				return
+			default:
+				msgC <- fmt.Sprintf("Result: %v", i)
+				time.Sleep(499 * time.Millisecond)
+			}
+		}
+	}()
+
+	return msgC
+}
+```
+
+#### Practical Use Cases
+- Graceful shutdown of servers and background workers
+- Enforcing timeouts on I/O or network operations
+- Canceling database queries or HTTP requests if the client disconnects
+- Handling user interrupts in CLI tools
+- Coordinating cancellation across multiple goroutines
+
+---
+
+### 4. Worker Pool
 
 The worker pool pattern is a concurrency design that manages a fixed number of worker goroutines to process tasks from a shared queue. It efficiently handles large numbers of independent tasks while controlling resource usage. Workers continuously pull tasks, process them concurrently, and send results to an output queue. This pattern prevents system overload, improves performance through parallel processing, and maintains predictable resource utilization, making it ideal for scenarios like batch operations or API request handling.
 
@@ -199,7 +282,7 @@ func main() {
 
 ---
 
-### 4. Fan-Out/Fan-In
+### 5. Fan-Out/Fan-In
 
 The fan-out/fan-in pattern is a concurrency design used to parallelize and coordinate tasks. In the fan-out stage, a single task is divided into smaller subtasks executed concurrently by multiple goroutines. The fan-in stage collects and combines results from all subtasks. This pattern improves performance by distributing workload across goroutines, enabling parallel processing. It's implemented using goroutines and channels in Go, making it efficient for handling large-scale, divisible tasks.
 
@@ -308,7 +391,7 @@ func main() {
 
 ---
 
-### 5. What are the key differences between "fan-out/fan-in" and "worker pool"  patterns?
+### 6. What are the key differences between "fan-out/fan-in" and "worker pool"  patterns?
 
 The key differences between the "fan-out/fan-in" pattern and the "worker pool" pattern are:
 
@@ -336,7 +419,7 @@ Both patterns can be used for concurrent processing, and the choice depends on s
 
 ---
 
-### 6. Producer-Consumer
+### 7. Producer-Consumer
 
 The producer-consumer pattern is a concurrency design pattern where one or more producer threads generate data or tasks, and one or more consumer threads process or execute them. This pattern uses a shared queue as an intermediary, allowing producers and consumers to work independently and at different rates. It helps decouple data production from consumption, enables efficient workload distribution, and facilitates resource management in concurrent systems.
 
@@ -360,7 +443,7 @@ The producer-consumer pattern is a concurrency design pattern where one or more 
 
 ---
 
-### 7. Pipeline
+### 8. Pipeline
 
 The pipeline pattern is a concurrency design pattern used to process data sequentially through multiple stages, where each stage performs a specific operation and passes the result to the next stage via channels. It enables efficient and modular data processing.
 
