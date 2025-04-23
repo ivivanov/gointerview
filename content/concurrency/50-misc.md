@@ -263,75 +263,78 @@ default:
 1. Blocking Behavior:
    - Without `default`, `select` blocks indefinitely until one of its cases is ready.
    - Example:
-     ```go
-     select {
-     case v := <-ch1: // Blocks until ch1 has data
-         fmt.Println(v)
-     case ch2 <- 42:  // Blocks until ch2 can receive
-     }
-     ```
+        ```go
+        select {
+        case v := <-ch1: // Blocks until ch1 has data
+            fmt.Println(v)
+        case ch2 <- 42:  // Blocks until ch2 can receive
+        }
+        ```
 
 2. Non-Blocking with `default`:
    - Immediately executes `default` if no channels are ready:
-     ```go
-     select {
-     case v := <-ch:
-         fmt.Println(v)
-     default:
-         fmt.Println("No data received")
-     }
-     ```
+        ```go
+        select {
+        case msg := <-ch:
+            fmt.Println("Received:", msg)
+        default:
+            fmt.Println("No message available")
+        }
+        ```
+
+        The `default` case in a `select` statement is executed immediately if none of the other channel operations are ready, making the select non-blocking. This allows your code to attempt sends or receives without waiting—if no channels are ready, the `default` case runs and the program continues. This is useful for implementing non-blocking operations, polling, or avoiding deadlocks when you want to proceed even if no communication can happen at that moment.
+
 
 3. Random Selection:
    - If multiple cases are ready simultaneously, one is chosen **randomly** to ensure fairness:
-     ```go
-     ch1, ch2 := make(chan int), make(chan int)
-     go func() { ch1 <- 1 }()
-     go func() { ch2 <- 2 }()
-     
-     select {
-     case v := <-ch1: // Randomly selected if both ch1 and ch2 are ready
-         fmt.Println(v)
-     case v := <-ch2:
-         fmt.Println(v)
-     }
-     ```
+        ```go
+        ch1, ch2 := make(chan int), make(chan int)
+        go func() { ch1 <- 1 }()
+        go func() { ch2 <- 2 }()
+        
+        select {
+        case v := <-ch1: // Randomly selected if both ch1 and ch2 are ready
+            fmt.Println(v)
+        case v := <-ch2:
+            fmt.Println(v)
+        }
+        ```
 
 #### Common Use Cases
 1. Timeouts:
-   ```go
-   select {
-   case res := <-apiCall:
-       fmt.Println(res)
-   case <-time.After(3 * time.Second):
-       fmt.Println("Request timed out")
-   }
-   ```
+    ```go
+    select {
+    case res := <-apiCall:
+        fmt.Println(res)
+    case <-time.After(3 * time.Second):
+        fmt.Println("Request timed out")
+    }
+    ```
 
 2. Event Loops:
-   ```go
-   for {
-       select {
-       case job := <-jobs:
-           process(job)
-       case <-shutdown:
-           return
-       }
-   }
-   ```
+    ```go
+    for {
+        select {
+        case job := <-jobs:
+            process(job)
+        case <-shutdown:
+            return
+        }
+    }
+    ```
 
 3. Priority Channels:
-   ```go
-   select {
-   case highPri := <-highPriorityChan: // Check high-priority first
-       handleHighPri(highPri)
-   default:
-       select {
-       case lowPri := <-lowPriorityChan: // Fallback to low-priority
-           handleLowPri(lowPri)
-       }
-   }
-   ```
+    ```go
+    select {
+    case highPri := <-highPriorityChan: // Check high-priority first
+        handleHighPri(highPri)
+    default:
+        select {
+        case lowPri := <-lowPriorityChan: // Fallback to low-priority
+            handleLowPri(lowPri)
+        }
+    }
+    ```
 
 #### Best Practices
 - **Avoid Empty `select{}`**: This blocks forever (useful for preventing `main` from exiting).
@@ -345,7 +348,7 @@ By leveraging `select`, you can write efficient, readable concurrent code that e
 ### 5. What is deadlock. Can you write an example of deadlock?
 A deadlock is a situation in concurrent programming where two or more processes or threads are unable to proceed because each is waiting for the other to release a resource, resulting in a circular dependency that prevents any of them from making progress.
  ```go
- package main
+package main
 
 func main() {
 	ch1 := make(chan int)
