@@ -22,6 +22,7 @@ If you're already familiar with Golang, feel free to dive straight into our comp
 - [Go by Example](https://gobyexample.com/)
 - [Tour of Go](https://tour.golang.org/)
 - [Effective Go](https://golang.org/doc/effective_go.html)
+- [golang-example](https://github.com/SimonWaldherr/golang-examples/tree/master)
 
 ### Blogs
 
