@@ -22,7 +22,8 @@ If you're already familiar with Golang, feel free to dive straight into our comp
 - [Go by Example](https://gobyexample.com/)
 - [Tour of Go](https://tour.golang.org/)
 - [Effective Go](https://golang.org/doc/effective_go.html)
-- [golang-example](https://github.com/SimonWaldherr/golang-examples/tree/master)
+- [Code examples](https://github.com/SimonWaldherr/golang-examples/tree/master)
+- [Concurrent Prime Sieve](https://go.dev/play/p/9U22NfrXeq)
 
 ### Blogs
 
@@ -47,7 +48,8 @@ If you're already familiar with Golang, feel free to dive straight into our comp
 
 ### Talks
 
-- [Go Concurrency Patterns](http://www.youtube.com/watch?v=f6kdp27TYZs) by Rob Pike (Google I/O)
+- [Go Concurrency Patterns](http://www.youtube.com/watch?v=f6kdp27TYZs) by Rob Pike
+- [Go Programming](https://www.youtube.com/watch?v=jgVhBThJdXc) Rob Pike & Russ Cox building a Load balancer
 
 Ready to kickstart your preparation? Explore our practice questions in the section to the left!
 
