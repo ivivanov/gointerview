@@ -50,6 +50,7 @@ If you're already familiar with Golang, feel free to dive straight into our comp
 
 - [Go Concurrency Patterns](http://www.youtube.com/watch?v=f6kdp27TYZs) by Rob Pike
 - [Go Programming](https://www.youtube.com/watch?v=jgVhBThJdXc) Rob Pike & Russ Cox building a Load balancer
+- [Concurrency != Parallelism](https://youtu.be/oV9rvDllKEg?si=UhOl0n65VWfBXaA0) by Rob Pike
 
 Ready to kickstart your preparation? Explore our practice questions in the section to the left!
 
