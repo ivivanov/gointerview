@@ -87,12 +87,24 @@ A race condition occurs when two or more concurrent operations access shared dat
 	}
 	```
 
-- Visualizing goroutines with execution trace:
-
-	```bash
-	go test -trace trace.out
-	go tool trace trace.out
-	```
+- Visualizing go routines with execution trace:
+	* collect the data
+		```bash
+		go test -trace trace.out
+		```
+		or
+		```bash
+		import "runtime/trace"
+		...
+		file, _ := os.Create("trace.out")
+		trace.Start(file)
+		Run()
+		trace.Stop()
+		```
+	* visualize
+		```bash
+		go tool trace trace.out
+		```
 
 - Naming goroutines for easier identification:
 
@@ -125,8 +137,8 @@ These examples demonstrate various techniques for debugging concurrent Go code, 
 To use pprof for analyzing goroutine stacks:
 
 #### Enable profiling in your Go program:
-- Import the pprof package:*** `import _ "net/http/pprof"`
-- Start an HTTP server:*** 
+- Import the pprof package: `import _ "net/http/pprof"`
+- Start an HTTP server: 
 	```go
 	go func() {
 		log.Println(http.ListenAndServe("localhost:1414", nil))
@@ -134,12 +146,12 @@ To use pprof for analyzing goroutine stacks:
 	```
 
 #### Generate a goroutine profile:
-- Access the pprof endpoint:*** `http://localhost:1414/debug/pprof/goroutine?debug=2`
+- Access the pprof endpoint: `http://localhost:1414/debug/pprof/goroutine?debug=2`
 - This provides a full goroutine stack dump
 
 #### Analyze the profile:
 - Use the `go tool pprof` command to examine the generated profile
-- For example:*** `go tool pprof http://localhost:1414/debug/pprof/goroutine`
+- For example: `go tool pprof http://localhost:1414/debug/pprof/goroutine`
 
 #### Interpret the results:
 - pprof groups goroutines by stack trace signature
