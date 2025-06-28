@@ -12,7 +12,7 @@ weight = 31
 ## Questions?
 1. How do you debug concurrent code in Go? 
 1. What is `pprof`? Name few key features.
-1. How do you use `pprof` to analyze goroutine stacks?
+1. How do you use `pprof`?
 1. What are the usual challenges debugging production-grade applications?
 1. How do you debug and resolve production issues?
 
@@ -133,10 +133,9 @@ These examples demonstrate various techniques for debugging concurrent Go code, 
 
 ---
 
-### 3. How do you use `pprof` to analyze goroutine stacks?
-To use pprof for analyzing goroutine stacks:
+### 3. How do you use `pprof`?
 
-#### Enable profiling in your Go program:
+#### 1. Use `pprof` for analyzing goroutine stacks:
 - Import the pprof package: `import _ "net/http/pprof"`
 - Start an HTTP server: 
 	```go
@@ -145,20 +144,34 @@ To use pprof for analyzing goroutine stacks:
 	}()
 	```
 
-#### Generate a goroutine profile:
-- Access the pprof endpoint: `http://localhost:1414/debug/pprof/goroutine?debug=2`
-- This provides a full goroutine stack dump
+- Generate a goroutine profile:
+	- Access the pprof endpoint: `http://localhost:1414/debug/pprof/goroutine?debug=2`
+	- This provides a full goroutine stack dump
 
-#### Analyze the profile:
-- Use the `go tool pprof` command to examine the generated profile
-- For example: `go tool pprof http://localhost:1414/debug/pprof/goroutine`
+- Analyze the profile:
+	- Use the `go tool pprof` command to examine the generated profile
+	- For example: `go tool pprof http://localhost:1414/debug/pprof/goroutine`
 
-#### Interpret the results:
-- pprof groups goroutines by stack trace signature
-- It provides information on goroutine states, function calls, and parameter signatures
+- Interpret the results:
+	- pprof groups goroutines by stack trace signature
+	- It provides information on goroutine states, function calls, and parameter signatures
 
-#### Visualize the data:
-- pprof can generate various reports, including CPU usage summaries, memory allocation details, and flame graphs
+- Visualize the data:
+	- pprof can generate various reports, including CPU usage summaries, memory allocation details, and flame graphs
+
+#### 2. Use `pprof` for CPU or Memory profiling:
+- Import `"github.com/pkg/profile"`
+- Set at the beginning of your app instruction to start & stop profiling with the appropriate options:
+	```Go
+	defer profile.Start(profile.MemProfile, profile.MemProfileRate(1), profile.ProfilePath(".")).Stop()
+
+	```
+	This will generate `cpu.pprof` or `mem.pprof`
+
+- Examine the generated profiles:
+	```bash
+	go tool pprof -http=:8080 mem.pprof 
+	```
 
 ---
 
