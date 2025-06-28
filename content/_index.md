@@ -52,7 +52,8 @@ If you're already familiar with Golang, feel free to dive straight into our comp
 - [Go Programming](https://www.youtube.com/watch?v=jgVhBThJdXc) Rob Pike & Russ Cox building a Load balancer
 - [Concurrency != Parallelism](https://youtu.be/oV9rvDllKEg?si=UhOl0n65VWfBXaA0) by Rob Pike
 - [Go tool trace](https://www.youtube.com/watch?v=V74JnrGTwKA) by Rhys Hiltner
-- [Profiling - pprof](https://www.youtube.com/watch?v=V74JnrGTwKA) by Dave Cheney
+- [Profiling](https://www.youtube.com/watch?v=nok0aYiGiYA) by Dave Cheney
+- [SOLID Go](https://www.youtube.com/watch?v=zzAdEt3xZ1M) by Dave Cheney
 
 Ready to kickstart your preparation? Explore our practice questions in the section to the left!
 
