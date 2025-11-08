@@ -7,10 +7,12 @@ weight = 31
 +++
 
 # Debugging in Go
-*Key Questions for Effective Troubleshooting*
+
+_Essential Troubleshooting Techniques_
 
 ## Questions?
-1. How do you debug concurrent code in Go? 
+
+1. How do you debug concurrent code in Go?
 1. What is `pprof`? Name few key features.
 1. How do you use `pprof`?
 1. What are the usual challenges debugging production-grade applications?
@@ -19,213 +21,241 @@ weight = 31
 ## Answers:
 
 ### 1. How do you debug concurrent code in Go?
+
 Here are some examples of how to debug concurrent code in Go:
 
-- Using Delve debugger:
+**Using Delve debugger:**
 
-	```bash
-	dlv debug
-	(dlv) break main.go:line
-	(dlv) continue
-	(dlv) goroutines
-	(dlv) goroutine 1 next
-	(dlv) print var_name
-	(dlv) locals
-	```
+```bash
+dlv debug
+(dlv) break main.go:line
+(dlv) continue
+(dlv) goroutines
+(dlv) goroutine 1 next
+(dlv) print var_name
+(dlv) locals
+```
 
-- Race detector:
+**Race detector:**
+
 A race condition occurs when two or more concurrent operations access shared data and at least one of them modifies it, potentially leading to unpredictable behavior due to the timing and sequence of the operations.
 
-	Example:
-	```go
-	var counter int
-	var wg sync.WaitGroup
-	wg.Add(2)
+Example:
 
-	go func(wg *sync.WaitGroup) {
-		counter++
-		wg.Done()
-	}(&wg)
+```go
+var counter int
+var wg sync.WaitGroup
+wg.Add(2)
 
-	go func(wg *sync.WaitGroup) {
-		counter++
-		wg.Done()
-	}(&wg)
+go func(wg *sync.WaitGroup) {
+	counter++
+	wg.Done()
+}(&wg)
 
-	wg.Wait()
-	```
+go func(wg *sync.WaitGroup) {
+	counter++
+	wg.Done()
+}(&wg)
 
-	```bash
-	go run -race .
-	```
+wg.Wait()
+```
 
-- Logging with goroutine IDs:
+```bash
+go run -race .
+```
 
-	```go
-	func goID() int {
-		var buf [64]byte
-		n := runtime.Stack(buf[:], false)
-		idField := strings.Fields(strings.TrimPrefix(string(buf[:n]), "goroutine "))[0]
-		id, err := strconv.Atoi(idField)
-		if err != nil {
-			panic(err)
-		}
-		return id
+**Logging with goroutine IDs:**
+
+```go
+func goID() int {
+	var buf [64]byte
+	n := runtime.Stack(buf[:], false)
+	idField := strings.Fields(strings.TrimPrefix(string(buf[:n]), "goroutine "))[0]
+	id, err := strconv.Atoi(idField)
+	if err != nil {
+		panic(err)
 	}
+	return id
+}
 
-	func main() {
-		ch := make(chan int) // Unbuffered channel
+func main() {
+	ch := make(chan int) // Unbuffered channel
 
-		go func() {
-			log.Printf("Goroutine %d:*** Starting work", goID())
+	go func() {
+		log.Printf("Goroutine %d:*** Starting work", goID())
 
-			ch <- 42 // Blocks until receiver is ready
-		}()
+		ch <- 42 // Blocks until receiver is ready
+	}()
 
-		value := <-ch // Blocks until sender sends data
-		fmt.Println(value)
-	}
-	```
+	value := <-ch // Blocks until sender sends data
+	fmt.Println(value)
+}
+```
 
-- Visualizing go routines with execution trace:
-	* collect the data
-		```bash
-		go test -trace trace.out
-		```
-		or
-		```bash
-		import "runtime/trace"
-		...
-		file, _ := os.Create("trace.out")
-		trace.Start(file)
-		Run()
-		trace.Stop()
-		```
-	* visualize
-		```bash
-		go tool trace trace.out
-		```
+**Visualizing goroutines with execution trace:**
 
-- Naming goroutines for easier identification:
+Collect the data:
 
-	```go
-	runtime.SetFinalizer(go func() {
-		debug.SetGoroutineLabels(context.TODO(), "worker")
-		// ... worker logic
-	}(), nil)
-	```
+```bash
+go test -trace trace.out
+```
 
-These examples demonstrate various techniques for debugging concurrent Go code, from using specialized debuggers to leveraging built-in Go tools for analysis and visualization.
+or
+
+```bash
+import "runtime/trace"
+...
+file, _ := os.Create("trace.out")
+trace.Start(file)
+Run()
+trace.Stop()
+```
+
+Visualize:
+
+```bash
+go tool trace trace.out
+```
+
+**Naming goroutines for easier identification:**
+
+```go
+runtime.SetFinalizer(go func() {
+	debug.SetGoroutineLabels(context.TODO(), "worker")
+	// ... worker logic
+}(), nil)
+```
 
 ---
 
 ### 2. What is `pprof`? Name few key features.
-`pprof` is a powerful profiling tool for Go programs that allows developers to analyze CPU usage, memory allocations, and goroutine behavior. It's part of the Go standard library and can generate detailed profiles of Go programs.  Key features of pprof include:
-- ***CPU profiling:*** Collects CPU usage data to identify time spent in different parts of the application
-- ***Memory profiling:*** Records heap allocations to monitor memory usage and detect potential leaks
-- ***Block profiling:*** Identifies locations where goroutines block or wait for synchronization
-- ***Mutex profiling:*** Reports on mutex contention in the application
-- ***Visualization capabilities:*** Generates both text and graphical reports for analysis
-- ***HTTP server integration:*** Can serve profiling data via HTTP for easy access
-- ***Symbolization:*** Can translate machine addresses to human-readable function names and line numbers
-- ***Comparison and aggregation:*** Allows comparing or combining multiple profiles for analysis
-- ***Customizable reporting:*** Offers options to adjust granularity (e.g., functions, files, lines) and sorting of results
+
+`pprof` is a powerful profiling tool for Go programs that allows developers to analyze CPU usage, memory allocations, and goroutine behavior. It's part of the Go standard library and can generate detailed profiles of Go programs. Key features of pprof include:
+
+- **CPU profiling:** Collects CPU usage data to identify time spent in different parts of the application
+- **Memory profiling:** Records heap allocations to monitor memory usage and detect potential leaks
+- **Block profiling:** Identifies locations where goroutines block or wait for synchronization
+- **Mutex profiling:** Reports on mutex contention in the application
+- **Visualization capabilities:** Generates both text and graphical reports for analysis
+- **HTTP server integration:** Can serve profiling data via HTTP for easy access
+- **Symbolization:** Can translate machine addresses to human-readable function names and line numbers
+- **Comparison and aggregation:** Allows comparing or combining multiple profiles for analysis
+- **Customizable reporting:** Offers options to adjust granularity (e.g., functions, files, lines) and sorting of results
 
 ---
 
 ### 3. How do you use `pprof`?
 
-#### 1. Use `pprof` for analyzing goroutine stacks:
-- Import the pprof package: `import _ "net/http/pprof"`
-- Start an HTTP server: 
-	```go
-	go func() {
-		log.Println(http.ListenAndServe("localhost:1414", nil))
-	}()
-	```
+#### Use `pprof` for analyzing goroutine stacks
 
-- Generate a goroutine profile:
-	- Access the pprof endpoint: `http://localhost:1414/debug/pprof/goroutine?debug=2`
-	- This provides a full goroutine stack dump
+1. Import the pprof package: `import _ "net/http/pprof"`
 
-- Analyze the profile:
-	- Use the `go tool pprof` command to examine the generated profile
-	- For example: `go tool pprof http://localhost:1414/debug/pprof/goroutine`
+2. Start an HTTP server:
 
-- Interpret the results:
-	- pprof groups goroutines by stack trace signature
-	- It provides information on goroutine states, function calls, and parameter signatures
+```go
+go func() {
+    log.Println(http.ListenAndServe("localhost:1414", nil))
+}()
+```
 
-- Visualize the data:
-	- pprof can generate various reports, including CPU usage summaries, memory allocation details, and flame graphs
+3. Generate a goroutine profile:
 
-#### 2. Use `pprof` for CPU or Memory profiling:
-- Import `"github.com/pkg/profile"`
-- Set at the beginning of your app instruction to start & stop profiling with the appropriate options:
-	```Go
-	defer profile.Start(profile.MemProfile, profile.MemProfileRate(1), profile.ProfilePath(".")).Stop()
+   - Access the pprof endpoint: `http://localhost:1414/debug/pprof/goroutine?debug=2`
+   - This provides a full goroutine stack dump
 
-	```
-	This will generate `cpu.pprof` or `mem.pprof`
+4. Analyze the profile:
 
-- Examine the generated profiles:
-	```bash
-	go tool pprof -http=:8080 mem.pprof 
-	```
+   - Use the `go tool pprof` command to examine the generated profile
+   - Example: `go tool pprof http://localhost:1414/debug/pprof/goroutine`
+
+5. Interpret the results:
+
+   - pprof groups goroutines by stack trace signature
+   - It provides information on goroutine states, function calls, and parameter signatures
+
+6. Visualize the data:
+   - pprof can generate various reports, including CPU usage summaries, memory allocation details, and flame graphs
+
+#### Use `pprof` for CPU or Memory profiling
+
+1. Import `"github.com/pkg/profile"`
+
+2. Set at the beginning of your app instruction to start & stop profiling with the appropriate options:
+
+```go
+defer profile.Start(profile.MemProfile, profile.MemProfileRate(1), profile.ProfilePath(".")).Stop()
+```
+
+This will generate `cpu.pprof` or `mem.pprof`
+
+3. Examine the generated profiles:
+
+```bash
+go tool pprof -http=:8080 mem.pprof
+```
 
 ---
 
 ### 4. What are the usual challenges debugging production-grade applications?
+
 Debugging production-grade applications presents several challenges:
 
-- ***Infrastructures:*** Distributed systems, serverless architectures, and microservices make it difficult to trace issues to their source
-- ***Limited visibility:*** Modern infrastructures often reduce visibility into software behavior, making it harder to understand and debug production environments
-- ***Remote debugging:*** When issues occur in production, developers may not have direct access to the local environment. Debugging in production can potentially disrupt current users, slow down application performance, or even crash the app
-- ***Data differences:*** Production environments often use different datasets than development or QA, leading to unforeseen issues
-- ***Reproducing issues:*** It can be challenging to replicate production problems in local or staging environments
-- ***Log analysis:*** Sifting through numerous log files to find relevant data is time-consuming and may require writing additional logs and redeploying the application
-- ***Unpredictable bugs:*** Some bugs may manifest in unexpected ways, making them difficult to pinpoint and resolve
-- ***Balancing speed and quality:*** Developers must maintain equilibrium between quick fixes and thorough, high-quality solutions
+- **Infrastructures:** Distributed systems, serverless architectures, and microservices make it difficult to trace issues to their source
+- **Limited visibility:** Modern infrastructures often reduce visibility into software behavior, making it harder to understand and debug production environments
+- **Remote debugging:** When issues occur in production, developers may not have direct access to the local environment. Debugging in production can potentially disrupt current users, slow down application performance, or even crash the app
+- **Data differences:** Production environments often use different datasets than development or QA, leading to unforeseen issues
+- **Reproducing issues:** It can be challenging to replicate production problems in local or staging environments
+- **Log analysis:** Sifting through numerous log files to find relevant data is time-consuming and may require writing additional logs and redeploying the application
+- **Unpredictable bugs:** Some bugs may manifest in unexpected ways, making them difficult to pinpoint and resolve
+- **Balancing speed and quality:** Developers must maintain equilibrium between quick fixes and thorough, high-quality solutions
 
 ---
 
 ### 5. How do you debug and resolve production issues?
+
 To debug and resolve production issues effectively, follow these key steps:
 
-1. Steps to reproduce
-	- Gather context from user reports, error descriptions, and logs
-	- Define conditions under which the issue occurs
-	- Set up a test environment to recreate production-like conditions
+**Steps to reproduce:**
 
-2. Logs and metrics
-	- Examine application, server, and infrastructure logs
-	- Use monitoring tools to identify anomalies in system health parameters
-	- Compare data before, during, and after the issue
+- Gather context from user reports, error descriptions, and logs
+- Define conditions under which the issue occurs
+- Set up a test environment to recreate production-like conditions
 
-3. Root cause analysis
-	- Generate hypotheses based on collected data
-	- Test hypotheses through controlled experiments
-	- Trace code paths and analyze dependencies
+**Logs and metrics:**
 
-4. Collaborate
-	- Involve relevant stakeholders - Devs, QAs, DevOps
-	- Assign clear roles and responsibilities
+- Examine application, server, and infrastructure logs
+- Use monitoring tools to identify anomalies in system health parameters
+- Compare data before, during, and after the issue
 
-5. Implement fix
-	- Develop a solution addressing the root cause
-	- Conduct thorough peer reviews and testing
-	- Deploy gradually using techniques like canary releases
-	- Monitor closely post-deployment for regressions
+**Root cause analysis:**
 
-6. Document
-	- Record findings and decisions made during the process
-	- Conduct post-mortem discussions to identify process improvements
-	- Update documentation and implement preventive measures
+- Generate hypotheses based on collected data
+- Test hypotheses through controlled experiments
+- Trace code paths and analyze dependencies
 
-7. Follow good practices 
-	- Use logging frameworks for detailed insights
-	- Implement proper error handling and logging in the codebase
-	- Utilize production debugging tools for real-time monitoring and analysis
-	- Have a well-versed production debugging team ready to respond quickly
+**Collaborate:**
+
+- Involve relevant stakeholders - Devs, QAs, DevOps
+- Assign clear roles and responsibilities
+
+**Implement fix:**
+
+- Develop a solution addressing the root cause
+- Conduct thorough peer reviews and testing
+- Deploy gradually using techniques like canary releases
+- Monitor closely post-deployment for regressions
+
+**Document:**
+
+- Record findings and decisions made during the process
+- Conduct post-mortem discussions to identify process improvements
+- Update documentation and implement preventive measures
+
+**Follow good practices:**
+
+- Use logging frameworks for detailed insights
+- Implement proper error handling and logging in the codebase
+- Utilize production debugging tools for real-time monitoring and analysis
+- Have a well-versed production debugging team ready to respond quickly
 
 ---

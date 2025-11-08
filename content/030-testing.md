@@ -7,10 +7,12 @@ weight = 30
 +++
 
 # Go Testing Fundamentals
-*Best Practices and Common Questions*
+
+_Best Practices and Testing Patterns_
 
 ## Questions?
-1. What are some best practices for writing unit tests in Go? 
+
+1. What are some best practices for writing unit tests in Go?
 1. Explain how to use table-driven tests in Go with an example.
 1. What is mocking and how do you handle it? Give an example.
 1. What is the difference between mock and stub?
@@ -18,44 +20,57 @@ weight = 30
 ## Answers:
 
 ### 1. What are some best practices for writing unit tests in Go?
-By following these practices, you can create more effective, maintainable, and comprehensive unit tests in Go:
-- ***Naming convention***:
-	- ***Group tests by functionality:*** Organize test cases based on features or modules
-	- ***Structure your tests properly:*** Include a clear title, preconditions, steps, and expected results for each test case
-	- ***Write clear and concise test cases:*** Ensure your tests have straightforward steps and expected results
-	- Basic function tests:
-		```go
-		TestParseJSON
-		TestCalculateTotal
-		TestEncryptPassword
-		TestGenerateUUID
-		```
-	- Specific scenario tests:
-		```go
-		TestValidateEmail_EmptyString_ShouldFail
-		TestValidateEmail_MissingAt_ShouldFail
-		TestValidateEmail_Success
-		```
-	For more info check [Go’s testing documentation](https://pkg.go.dev/testing)
 
-- ***Use table-driven tests:*** This approach allows you to run the same test logic with different inputs and expected outputs, making tests more thorough and organized
-- ***Use interfaces and mock external dependencies:*** This helps in isolating the unit being tested and avoiding external API calls or file I/O
-- ***Cover edge cases and boundary conditions:*** Ensure your tests include various scenarios, including potential edge cases
-- ***Use the -v flag with go test for increased verbosity:*** This provides more detailed output about test execution
-- ***Parallelize tests when possible:*** This can improve test execution speed
-- ***Avoid asserting error messages directly:*** Focus on testing observable behavior rather than implementation details
-- ***Use subtests with t.Run():*** This allows for verifying results with various inputs in one function
-- Utilize Go's built-in testing package and tools like go test -cover for coverage analysis
-- Write tests that are not too closely tied to the production code to avoid frequent test breakage during refactoring
+By following these practices, you can create more effective, maintainable, and comprehensive unit tests in Go:
+
+**Naming convention:**
+
+- **Group tests by functionality:** Organize test cases based on features or modules
+- **Structure your tests properly:** Include a clear title, preconditions, steps, and expected results for each test case
+- **Write clear and concise test cases:** Ensure your tests have straightforward steps and expected results
+
+Basic function tests:
+
+```go
+TestParseJSON
+TestCalculateTotal
+TestEncryptPassword
+TestGenerateUUID
+```
+
+Specific scenario tests:
+
+```go
+TestValidateEmail_EmptyString_ShouldFail
+TestValidateEmail_MissingAt_ShouldFail
+TestValidateEmail_Success
+```
+
+For more info check [Go's testing documentation](https://pkg.go.dev/testing)
+
+**Best practices:**
+
+- **Use table-driven tests:** This approach allows you to run the same test logic with different inputs and expected outputs, making tests more thorough and organized
+- **Use interfaces and mock external dependencies:** This helps in isolating the unit being tested and avoiding external API calls or file I/O
+- **Cover edge cases and boundary conditions:** Ensure your tests include various scenarios, including potential edge cases
+- **Use the -v flag with go test for increased verbosity:** This provides more detailed output about test execution
+- **Parallelize tests when possible:** This can improve test execution speed
+- **Avoid asserting error messages directly:** Focus on testing observable behavior rather than implementation details
+- **Use subtests with t.Run():** This allows for verifying results with various inputs in one function
+- **Utilize Go's built-in testing package:** Tools like `go test -cover` for coverage analysis
+- **Write tests that are not too closely tied to the production code:** Avoid frequent test breakage during refactoring
 
 ---
 
 ### 2. Explain how to use table-driven tests in Go with an example.
+
 Table-driven tests in Go are a popular and efficient way to write unit tests for functions with multiple input scenarios. Here's how to use them:
 
-1. Define a slice or map of test cases, each containing input parameters and expected outputs.
-2. Iterate over the test cases, running the function being tested with each set of inputs.
-3. Compare the actual output with the expected output for each case.
+1. Define a slice or map of test cases, each containing input parameters and expected outputs
+2. Iterate over the test cases, running the function being tested with each set of inputs
+3. Compare the actual output with the expected output for each case
+
+Example:
 
 Here's an example of a table-driven test for a simple `sum` function:
 
@@ -85,31 +100,31 @@ func TestSum(t *testing.T) {
 
 This approach offers several benefits:
 
-1. Improved readability and maintainability
-2. Easy addition of new test cases
-3. Reduced code duplication
-4. Better test coverage with multiple scenarios
-
-Table-driven tests are particularly useful for functions with multiple input parameters or complex logic requiring various test scenarios.
+- Improved readability and maintainability
+- Easy addition of new test cases
+- Reduced code duplication
+- Better test coverage with multiple scenarios
 
 ---
 
 ### 3. What is mocking and how do you handle it? Give an example.
+
 Mocking is a technique used in software testing to create simulated objects that mimic the behavior of real objects. In Go, mocking is particularly useful for isolating units of code during testing and simulating dependencies. To handle mocking in Go:
 
-- ***Use interfaces:*** Define interfaces for your dependencies to make them easier to mock
-- ***Mocking libraries:*** Tools like GoMock can automate the creation of mock objects, reducing boilerplate code
-- ***Use constructor injection:*** This makes it easier to inject mocks during testing while using real implementations in production
-- ***Focus on behavior, not implementation:*** Write tests that verify expected outcomes rather than specific method call sequences
-- ***Use built-in matchers:*** Take advantage of matchers provided by mocking libraries to make tests more flexible
-- ***Clean up after tests:*** Use `defer ctrl.Finish()` to ensure proper cleanup of mock objects
+- **Use interfaces:** Define interfaces for your dependencies to make them easier to mock
+- **Mocking libraries:** Tools like GoMock can automate the creation of mock objects, reducing boilerplate code
+- **Use constructor injection:** This makes it easier to inject mocks during testing while using real implementations in production
+- **Focus on behavior, not implementation:** Write tests that verify expected outcomes rather than specific method call sequences
+- **Use built-in matchers:** Take advantage of matchers provided by mocking libraries to make tests more flexible
+- **Clean up after tests:** Use `defer ctrl.Finish()` to ensure proper cleanup of mock objects
 
-#### Example:
+#### Example
 
 Let's create example in which we:
+
 1. Define `UserRepository` interface
 2. Create a mock of that interface
-3. Setup up expectations on the mock
+3. Set up expectations on the mock
 4. Use the mock in a test to verify behavior
 
 By using mocks, we can test the `UserService` without needing a real database or API, making our tests faster and more isolated.
@@ -185,36 +200,44 @@ func TestGetUserName(t *testing.T) {
 ---
 
 ### 4. What is the difference between mock and stub?
+
 Mocks and stubs are both test doubles used in software testing, but they serve different purposes and have distinct characteristics:
 
-1. Purpose:
-   - Mocks are used to verify behavior and interactions between objects.
-   - Stubs are used to provide predetermined responses to method calls, focusing on state verification
+**Purpose:**
 
-2. Functionality:
-   - Mocks can be programmed to expect specific method calls, arguments, and call order
-   - Stubs provide consistent, predefined responses to method calls without verifying interactions
+- **Mocks** are used to verify behavior and interactions between objects
+- **Stubs** are used to provide predetermined responses to method calls, focusing on state verification
 
-3. Verification:
-   - Mocks allow you to verify whether specific interactions have occurred during the test
-   - Stubs focus on returning predefined data and don't verify interactions
+**Functionality:**
 
-4. Complexity:
-   - Mocks are generally more complex and suitable for testing intricate systems with multiple dependencies
-   - Stubs are simpler and often used for testing isolated units with minimal dependencies
+- **Mocks** can be programmed to expect specific method calls, arguments, and call order
+- **Stubs** provide consistent, predefined responses to method calls without verifying interactions
 
-5. Usage:
-   - Mocks are typically used when you want to ensure correct interactions between objects
-   - Stubs are used when you need to control the output of dependencies to create specific test scenarios
+**Verification:**
 
-6. Test focus:
-   - Mocks focus on behavior verification, ensuring methods are called correctly
-   - Stubs focus on state verification, providing consistent results for testing
+- **Mocks** allow you to verify whether specific interactions have occurred during the test
+- **Stubs** focus on returning predefined data and don't verify interactions
 
-7. Flexibility:
-   - Mocks offer greater flexibility for specifying expected behavior and interactions
-   - Stubs are more static, providing predictable responses
+**Complexity:**
 
-In summary, use stubs for simple tests focusing on functionality and state, and use mocks for more complex tests requiring behavior verification and interaction checking.
+- **Mocks** are generally more complex and suitable for testing intricate systems with multiple dependencies
+- **Stubs** are simpler and often used for testing isolated units with minimal dependencies
+
+**Usage:**
+
+- **Mocks** are typically used when you want to ensure correct interactions between objects
+- **Stubs** are used when you need to control the output of dependencies to create specific test scenarios
+
+**Test focus:**
+
+- **Mocks** focus on behavior verification, ensuring methods are called correctly
+- **Stubs** focus on state verification, providing consistent results for testing
+
+**Flexibility:**
+
+- **Mocks** offer greater flexibility for specifying expected behavior and interactions
+- **Stubs** are more static, providing predictable responses
+
+In summary, use stubs for simple tests focusing on functionality and state, and use mocks for more complex tests requiring behavior verification and interaction checking
 
 ---

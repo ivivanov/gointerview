@@ -10,28 +10,30 @@ weight = 40
 *Design Pattern Questions for Tech Interviews*
 
 ## Questions?
+
 1. What concurrency design patterns are you familiar with?
 1. Generator
 1. Timeout, Quit signal & Context
 1. Worker Pool
 1. Fan-Out/Fan-In
-1. What are the key differences between "fan-out/fan-in" and "worker pool"  patterns?
+1. What are the key differences between "fan-out/fan-in" and "worker pool" patterns?
 1. Pipeline
 
 ## Answers:
 
 ### 1. What concurrency design patterns are you familiar with?
-- ***Generator:*** Functions that return channels
-- ***Timeout:*** Adding time limits to goroutine execution
-- ***Quit Signal:*** Gracefully stopping goroutines
-- ***Context:*** Managing cancellation and deadlines across goroutines
-- ***Worker Pool:*** Managing task execution across multiple goroutines
-- ***Fan-Out/Fan-In:*** Distributing tasks and collecting results
-- ***Producer-Consumer:*** Decoupling data production from consumption via buffer
-- ***Pipeline:*** Processing data in stages
-- ***Multiplexing:*** Combining multiple channels
-- ***Bounded Parallelism:*** Limiting concurrent execution
-- ***Semaphore:*** Controlling access to shared resources
+
+- **Generator:** Functions that return channels
+- **Timeout:** Adding time limits to goroutine execution
+- **Quit Signal:** Gracefully stopping goroutines
+- **Context:** Managing cancellation and deadlines across goroutines
+- **Worker Pool:** Managing task execution across multiple goroutines
+- **Fan-Out/Fan-In:** Distributing tasks and collecting results
+- **Producer-Consumer:** Decoupling data production from consumption via buffer
+- **Pipeline:** Processing data in stages
+- **Multiplexing:** Combining multiple channels
+- **Bounded Parallelism:** Limiting concurrent execution
+- **Semaphore:** Controlling access to shared resources
 
 ---
 
@@ -46,13 +48,12 @@ The Generator pattern in Go uses goroutines and channels to produce data streams
 - **Concurrent data production** without blocking consumers
 - **Simplified iteration** over asynchronous data streams
 
-
 #### Key Advantages
 
-- ***Lazy Evaluation:*** Values generate only when requested
-- ***Concurrency Safety:*** Built-in channel synchronization
-- ***Composability:*** Easy integration with pipelines and other patterns
-- ***Resource Control:*** Clean termination via channel closure
+- **Lazy Evaluation:** Values generate only when requested
+- **Concurrency Safety:** Built-in channel synchronization
+- **Composability:** Easy integration with pipelines and other patterns
+- **Resource Control:** Clean termination via channel closure
 
 #### Example
 
@@ -76,14 +77,13 @@ func main() {
 }
 ```
 
-
 #### Code Flow Explanation
 
-1. ***Channel Creation:*** `make(chan int)` creates unbuffered channel
-1. ***Goroutine Launch:*** Anonymous function starts concurrent execution
-1. ***Channel Closure:*** `defer close(out)` signals completion from the sender fn
-1. ***Value Production:*** Loop sends odd numbers via `out <- i`
-1. ***Consumption:*** Main function receives values using `range`
+1. **Channel Creation:** `make(chan int)` creates unbuffered channel
+2. **Goroutine Launch:** Anonymous function starts concurrent execution
+3. **Channel Closure:** `defer close(out)` signals completion from the sender fn
+4. **Value Production:** Loop sends odd numbers via `out <- i`
+5. **Consumption:** Main function receives values using `range`
 
 #### Example Use Cases
 
@@ -95,15 +95,18 @@ func main() {
 ---
 
 ### 3. Timeout, Quit signal & Context
+
 Timeout, quit signal, and context patterns in Go coordinate cancellation, timeouts, and graceful shutdowns for concurrent operations. The `select` statement enables responsive handling of these events by waiting on multiple channels simultaneously.
 
 #### Useful for:
+
 - Preventing indefinite blocking by enforcing timeouts
 - Enables graceful shutdown on user or system quit signals
 - Propagates cancellation across goroutines for resource cleanup
 - Handles multiple cancellation sources (timeout, quit, manual) efficiently
 
 #### Key Advantages
+
 - Centralized, responsive control over goroutine lifecycles
 - Clean resource management and predictable shutdown
 - Simple, readable mechanism for handling multiple asynchronous events
@@ -168,6 +171,7 @@ func oddsGenerator(ctx context.Context, max int) <-chan string {
 ```
 
 #### Practical Use Cases
+
 - Graceful shutdown of servers and background workers
 - Enforcing timeouts on I/O or network operations
 - Canceling database queries or HTTP requests if the client disconnects
@@ -197,6 +201,7 @@ The worker pool pattern is a concurrency design that manages a fixed number of w
    - Enables result collection/aggregation
 
 #### Key Advantages
+
 - Predictable resource usage
 - Better error handling
 - Improved performance scaling
@@ -256,24 +261,26 @@ func main() {
 ```
 
 #### Flow
+
 1. Workers start and block waiting for jobs.
-    - 3 workers process 5 jobs concurrently
+   - 3 workers process 5 jobs concurrently
 1. Each worker:
-    - Receives jobs from `jobs` channel
-    - Processes job (simulated with 1s sleep)
+   - Receives jobs from `jobs` channel
+   - Processes job (simulated with 1s sleep)
 1. Workers process jobs concurrently.
-    - Send results to `results` channel
-    - Exit when jobs channel closes
+   - Send results to `results` channel
+   - Exit when jobs channel closes
 1. After all jobs complete:
    - Workers exit via closed jobs channel
    - Results channel closes
 1. Main collects and prints results.
-    - `sync.WaitGroup` ensures main waits for worker completion
-    - Closing channels signals completion:
-        - `close(jobs)` triggers worker exit
-        - `close(results)` enables safe result collection
+   - `sync.WaitGroup` ensures main waits for worker completion
+   - Closing channels signals completion:
+     - `close(jobs)` triggers worker exit
+     - `close(results)` enables safe result collection
 
-#### Example Use Cases:
+#### Example Use Cases
+
 - Batch processing large datasets
 - Handling API rate limits
 - Image/video processing pipelines
@@ -287,25 +294,30 @@ func main() {
 The fan-out/fan-in pattern is a concurrency design used to parallelize and coordinate tasks. In the fan-out stage, a single task is divided into smaller subtasks executed concurrently by multiple goroutines. The fan-in stage collects and combines results from all subtasks. This pattern improves performance by distributing workload across goroutines, enabling parallel processing. It's implemented using goroutines and channels in Go, making it efficient for handling large-scale, divisible tasks.
 
 #### Problems Solved by the Pattern
-1. High-volume processing 
-    - Distributes workloads across multiple workers
-    - Handle large datasets or tasks efficiently
-    - Processes independent tasks concurrently to minimize total execution time
+
+1. High-volume processing
+
+   - Distributes workloads across multiple workers
+   - Handle large datasets or tasks efficiently
+   - Processes independent tasks concurrently to minimize total execution time
 
 1. Resource optimization
-    - Limits concurrent operations to prevent system overload 
-    - Maximizing CPU utilization
 
-1. Result aggregation 
-    - Simplifies collecting outputs from parallel operations into a unified stream
-    
+   - Limits concurrent operations to prevent system overload
+   - Maximizing CPU utilization
+
+1. Result aggregation
+   - Simplifies collecting outputs from parallel operations into a unified stream
+
 #### Key Advantages
-- ***Scalability:*** Easily adjust worker count to match workload demands
-- ***Decoupled components:*** Workers operate independently, improving fault isolation
-- ***Order-agnostic processing:*** Ideal for tasks where result order doesn't matter
-- ***Cost efficiency:*** Reduces cloud costs via optimized resource usage (e.g., AWS Lambda parallel invocations)
 
-#### Example:
+- **Scalability:** Easily adjust worker count to match workload demands
+- **Decoupled components:** Workers operate independently, improving fault isolation
+- **Order-agnostic processing:** Ideal for tasks where result order doesn't matter
+- **Cost efficiency:** Reduces cloud costs via optimized resource usage (e.g., AWS Lambda parallel invocations)
+
+#### Example
+
 ```go
 package main
 
@@ -362,26 +374,32 @@ func main() {
 ```
 
 #### Code Flow Explanation
+
 1. Initialization
+
    - Create buffered channels for jobs and results
    - Initialize WaitGroup for worker synchronization
 
 1. Fan-Out Phase
+
    - Launch worker goroutines that pull from `jobs` channel
    - Each worker processes jobs concurrently
 
 1. Job Distribution
+
    - Feed jobs to workers via channel
    - Close channel when done to trigger worker exit
 
 1. Fan-In Phase
+
    - Close results channel after all workers complete
    - Enables clean exit from results loop
 
 1. Result Aggregation
    - Main thread processes combined outputs
 
-#### Example Use Cases:
+#### Example Use Cases
+
 - Real-time data processing (IoT sensor streams)
 - Bulk image/video transcoding
 - Distributed web scraping
@@ -391,30 +409,34 @@ func main() {
 
 ---
 
-### 6. What are the key differences between "fan-out/fan-in" and "worker pool"  patterns?
+### 6. What are the key differences between "fan-out/fan-in" and "worker pool" patterns?
 
 The key differences between the "fan-out/fan-in" pattern and the "worker pool" pattern are:
 
-1. Task Distribution:
-   - Fan-out/fan-in: Dynamically creates goroutines for each task, potentially leading to a large number of concurrent goroutines.
-   - Worker pool: Uses a fixed number of worker goroutines that process tasks from a shared queue.
+**Task Distribution:**
 
-1. Concurrency Control:
-   - Fan-out/fan-in: Offers less control over maximum concurrency, as it can spawn many goroutines.
-   - Worker pool: Provides better control over resource usage by limiting the number of concurrent workers.
+- **Fan-out/fan-in:** Dynamically creates goroutines for each task, potentially leading to a large number of concurrent goroutines
+- **Worker pool:** Uses a fixed number of worker goroutines that process tasks from a shared queue
 
-1. Flexibility:
-   - Fan-out/fan-in: More flexible for handling varying workloads and task types.
-   - Worker pool: Better suited for consistent workloads and similar task types.
+**Concurrency Control:**
 
-1. Resource Management:
-   - Fan-out/fan-in: May require additional mechanisms like semaphores or rate limiters for resource control.
-   - Worker pool: Inherently manages resources by limiting the number of concurrent workers.
+- **Fan-out/fan-in:** Offers less control over maximum concurrency, as it can spawn many goroutines
+- **Worker pool:** Provides better control over resource usage by limiting the number of concurrent workers
 
-1. Implementation Complexity:
-   - Fan-out/fan-in: Can be simpler to implement for small-scale tasks.
-   - Worker pool: May require more setup but offers better long-term scalability.
+**Flexibility:**
 
+- **Fan-out/fan-in:** More flexible for handling varying workloads and task types
+- **Worker pool:** Better suited for consistent workloads and similar task types
+
+**Resource Management:**
+
+- **Fan-out/fan-in:** May require additional mechanisms like semaphores or rate limiters for resource control
+- **Worker pool:** Inherently manages resources by limiting the number of concurrent workers
+
+**Implementation Complexity:**
+
+- **Fan-out/fan-in:** Can be simpler to implement for small-scale tasks
+- **Worker pool:** May require more setup but offers better long-term scalability
 Both patterns can be used for concurrent processing, and the choice depends on specific application requirements and resource constraints.
 
 ---
@@ -424,22 +446,25 @@ Both patterns can be used for concurrent processing, and the choice depends on s
 The producer-consumer pattern is a concurrency design pattern where one or more producer threads generate data or tasks, and one or more consumer threads process or execute them. This pattern uses a shared queue as an intermediary, allowing producers and consumers to work independently and at different rates. It helps decouple data production from consumption, enables efficient workload distribution, and facilitates resource management in concurrent systems.
 
 #### Problems Solved
-- ***Concurrent Access:*** Prevents race conditions when multiple producers/consumers access shared resources
-- ***Rate Mismatch:*** Buffers data when production and consumption speeds differ
-- ***Resource Management:*** Avoids overwhelming systems by limiting concurrent processing (backpressure)
-- ***Decoupling:*** Separates data generation logic from processing logic
+
+- **Concurrent Access:** Prevents race conditions when multiple producers/consumers access shared resources
+- **Rate Mismatch:** Buffers data when production and consumption speeds differ
+- **Resource Management:** Avoids overwhelming systems by limiting concurrent processing (backpressure)
+- **Decoupling:** Separates data generation logic from processing logic
 
 #### Key Advantages
-- ***Modularity:*** Producers and consumers operate independently
-- ***Scalability:*** Easily add more producers/consumers without redesign
-- ***Efficiency:*** Enables parallel processing and load balancing
-- ***Backpressure Handling:*** Prevents system overload via bounded buffers
+
+- **Modularity:** Producers and consumers operate independently
+- **Scalability:** Easily add more producers/consumers without redesign
+- **Efficiency:** Enables parallel processing and load balancing
+- **Backpressure Handling:** Prevents system overload via bounded buffers
 
 #### Common Use Cases
-- ***Real-Time Data:*** Stock tickers, sensor data processing
-- ***Task Queues:*** Web servers handling HTTP requests
-- ***Logging Systems:*** Aggregating logs from multiple sources
-- ***Distributed Systems:*** Asynchronous communication between microservices
+
+- **Real-Time Data:** Stock tickers, sensor data processing
+- **Task Queues:** Web servers handling HTTP requests
+- **Logging Systems:** Aggregating logs from multiple sources
+- **Distributed Systems:** Asynchronous communication between microservices
 
 ---
 
@@ -448,25 +473,28 @@ The producer-consumer pattern is a concurrency design pattern where one or more 
 The pipeline pattern is a concurrency design pattern used to process data sequentially through multiple stages, where each stage performs a specific operation and passes the result to the next stage via channels. It enables efficient and modular data processing.
 
 #### Problems Solved by the Pattern
-- ***Sequential Data Processing:*** Handles multi-step workflows where data needs to be transformed or processed in stages
-- ***Concurrency:*** Allows multiple stages to run concurrently, improving performance
-- ***Decoupling:*** Separates logic for each stage, making the code more modular and easier to maintain
-- ***Scalability:*** Efficiently processes large datasets by leveraging parallelism
+
+- **Sequential Data Processing:** Handles multi-step workflows where data needs to be transformed or processed in stages
+- **Concurrency:** Allows multiple stages to run concurrently, improving performance
+- **Decoupling:** Separates logic for each stage, making the code more modular and easier to maintain
+- **Scalability:** Efficiently processes large datasets by leveraging parallelism
 
 #### Key Advantages
-- ***Modularity:*** Each stage is independent, making it easy to add, remove, or modify stages without affecting the rest of the pipeline
-- ***Concurrent Execution:*** Multiple stages can operate simultaneously, reducing overall processing time
-- ***Improved Throughput:*** Enables efficient use of CPU and I/O resources by processing data in parallel
-- ***Error Handling:*** Errors can be isolated and handled at specific stages without affecting others
+
+- **Modularity:** Each stage is independent, making it easy to add, remove, or modify stages without affecting the rest of the pipeline
+- **Concurrent Execution:** Multiple stages can operate simultaneously, reducing overall processing time
+- **Improved Throughput:** Enables efficient use of CPU and I/O resources by processing data in parallel
+- **Error Handling:** Errors can be isolated and handled at specific stages without affecting others
 
 #### Common Use Cases
-- ***ETL (Extract, Transform, Load):*** Processing and transforming large datasets
-- ***Image or Video Processing Pipelines:*** Sequential operations like resizing, filtering, and saving images
-- ***Text Analysis:*** Tokenization, filtering, and sentiment analysis of text data
-- ***Financial Data Analysis:*** Sequential calculations on large streams of financial data
-- ***Log Processing:*** Filtering, transforming, and aggregating logs in real-time
 
-#### Example:
+- **ETL (Extract, Transform, Load):** Processing and transforming large datasets
+- **Image or Video Processing Pipelines:** Sequential operations like resizing, filtering, and saving images
+- **Text Analysis:** Tokenization, filtering, and sentiment analysis of text data
+- **Financial Data Analysis:** Sequential calculations on large streams of financial data
+- **Log Processing:** Filtering, transforming, and aggregating logs in real-time
+
+#### Example
 
 ```go
 package main
@@ -527,19 +555,19 @@ func main() {
 #### Code Flow Explanation
 
 1. Stage Initialization:
-    - Each stage is implemented as a function that takes an input channel and returns an output channel
-    - Goroutines are used to execute each stage concurrently
+   - Each stage is implemented as a function that takes an input channel and returns an output channel
+   - Goroutines are used to execute each stage concurrently
 1. Data Flow:
-    - Data flows through the pipeline via channels
-    - Each stage processes its input and sends results to the next stage
+   - Data flows through the pipeline via channels
+   - Each stage processes its input and sends results to the next stage
 1. Termination:
-    - Channels are closed when a stage finishes processing all input data (`defer close(out)`)
-    - Closing channels signals downstream stages to stop reading
+   - Channels are closed when a stage finishes processing all input data (`defer close(out)`)
+   - Closing channels signals downstream stages to stop reading
 1. Final Output:
-    - The final stage 4 consumes the filtered values from stage 3 and displays them
-
+   - The final stage 4 consumes the filtered values from stage 3 and displays them
 
 #### Best Practices When Coding
+
 - Always close output channels when a stage finishes processing (`defer close(out)`)
 - If stages have varying speeds, use buffered channels to prevent blocking fast producers or slow consumers
 - Use a custom struct (e.g., `Result { Value int, Err error }`) to propagate errors through the pipeline without panicking
