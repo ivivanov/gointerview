@@ -3,24 +3,28 @@ languageCode = 'en-us'
 title = 'Go Interview'
 theme = 'hugo-book'
 
-# (Optional) Set Google Analytics if you use it to track your website.
-# Always put it on the top of the configuration file, otherwise it won't work
-googleAnalytics = "G-SMC54680CC"
-
-# (Optional) If you provide a Disqus shortname, comments will be enabled on
-# all pages.
-# disqusShortname = "golang-interview"
-
 # (Optional) Set this to true if you use capital letters in file names
 # disablePathToLower = true
 
-# (Optional) Set this to true to enable 'Last Modified by' date and git author
+# (Optional) Set this to enable 'Last Modified by' date and git author
 #  information on 'doc' type pages.
 enableGitInfo = true
 
 # (Optional) Theme is intended for documentation use, therefore it doesn't render taxonomy.
 # You can remove related files with config below
-disableKinds = ['taxonomy']
+disableKinds = ['taxonomy', 'term']
+
+# Suppress taxonomy error message for Hugo 0.73.0+
+ignoreErrors = ['error-disable-taxonomy']
+
+# Google Analytics configuration (new format for Hugo 0.110+)
+[services]
+[services.googleAnalytics]
+ID = "G-SMC54680CC"
+
+# (Optional) Disqus configuration (new format for Hugo 0.110+)
+# [services.disqus]
+# shortname = "golang-interview"
 
 [params]
 # (Optional, default light) Sets color theme: light, dark or auto.
