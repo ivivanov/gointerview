@@ -7,7 +7,8 @@ weight = 40
 +++
 
 # Efficient Concurrent Go
-*Design Pattern Questions for Tech Interviews*
+
+_Design Pattern Questions for Tech Interviews_
 
 ## Questions?
 
@@ -185,17 +186,20 @@ func oddsGenerator(ctx context.Context, max int) <-chan string {
 The worker pool pattern is a concurrency design that manages a fixed number of worker goroutines to process tasks from a shared queue. It efficiently handles large numbers of independent tasks while controlling resource usage. Workers continuously pull tasks, process them concurrently, and send results to an output queue. This pattern prevents system overload, improves performance through parallel processing, and maintains predictable resource utilization, making it ideal for scenarios like batch operations or API request handling.
 
 #### Problems Solved by Worker Pool Pattern
+
 1. Resource Management
+
    - Limits concurrent operations to prevent system overload
    - Controls memory usage by capping goroutine count
    - Avoids thread/goroutine spawning overhead
 
 1. Efficient Concurrency
+
    - Processes N jobs in ~(N/Workers) seconds vs N sec sequentially
    - Reuses existing workers instead of creating per-task goroutines
    - Balances workload across available CPU cores
 
-1. Task Coordination  
+1. Task Coordination
    - Ensures orderly processing of tasks
    - Provides clean shutdown mechanism
    - Enables result collection/aggregation
@@ -437,7 +441,7 @@ The key differences between the "fan-out/fan-in" pattern and the "worker pool" p
 
 - **Fan-out/fan-in:** Can be simpler to implement for small-scale tasks
 - **Worker pool:** May require more setup but offers better long-term scalability
-Both patterns can be used for concurrent processing, and the choice depends on specific application requirements and resource constraints.
+  Both patterns can be used for concurrent processing, and the choice depends on specific application requirements and resource constraints.
 
 ---
 
