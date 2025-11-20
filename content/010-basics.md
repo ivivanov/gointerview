@@ -20,6 +20,7 @@ _Essential Concepts for Newcomers_
 1. What’s the difference between `nil` interfaces and empty interfaces in Go? How do you handle type assertions safely?
 1. What are variadic functions in Go, and when should they be used?
 1. What is the `iota` keyword, and how is it used in Go?
+1. What are iterators and the yield function pattern in Go 1.23+? How do they work?
 1. Compare slices vs arrays
 
 ## Answers:
@@ -119,21 +120,49 @@ Go interfaces are collections of method signatures that define a set of behavior
 - **Composition over inheritance:** Interfaces in Go encourage composition rather than hierarchical inheritance, leading to more flexible and maintainable code structures
 - **Late abstraction:** Go's interface design allows developers to define abstractions as they become apparent, rather than forcing early decisions about type hierarchies
 - **Reflection and type assertions:** Interfaces enable runtime type inspection and manipulation through reflection and type assertions
-  Interfaces in Go provide a powerful tool for creating clean, modular, and extensible code by defining behavior contracts that types can fulfill without explicit declarations.
+
+Interfaces in Go provide a powerful tool for creating clean, modular, and extensible code by defining behavior contracts that types can fulfill without explicit declarations.
 
 ---
 
 ### 5. How do you implement polymorphism in Go?
 
-Go implements polymorphism primarily through interfaces, without using generics. This approach is known as runtime polymorphism. Here are the key ways to achieve it:
+Go implements polymorphism through two main approaches:
+
+1. **Runtime polymorphism via interfaces** (traditional approach since Go 1.0)
+2. **Compile-time polymorphism via generics** (introduced in Go 1.18)
+
+#### Interface-based Polymorphism (Runtime)
+
+This is the most common form of polymorphism in Go:
 
 - **Interface-based polymorphism:** Define interfaces that specify a set of methods, then implement these interfaces in different types. This allows for flexible code that can work with any type adhering to the interface contract
 - **Type assertions and type switches:** These mechanisms allow for runtime type checking and branching based on concrete types, enabling polymorphic behavior
-- **Empty interface (interface{}):** This can be used to accept any type, providing a form of polymorphism at the cost of type safety
+- **Empty interface (interface{} or any):** This can be used to accept any type, providing a form of polymorphism at the cost of type safety
 - **Function values and closures:** These can be used to create polymorphic behavior by passing functions as arguments or returning them from other functions
 - **Embedding:** Struct embedding allows for a form of composition that can achieve some polymorphic behaviors
 
-These techniques allow Go to support polymorphism without the need for generics, maintaining the language's focus on simplicity and compile-time type safety
+#### Generic Polymorphism (Compile-time)
+
+Go 1.18+ supports generics for compile-time polymorphism:
+
+```go
+// Generic function working with any comparable type
+func Contains[T comparable](slice []T, item T) bool {
+    for _, v := range slice {
+        if v == item {
+            return true
+        }
+    }
+    return true
+}
+
+// Works with different types at compile time
+Contains([]int{1, 2, 3}, 2)
+Contains([]string{"a", "b"}, "c")
+```
+
+Both approaches have their use cases: interfaces provide runtime flexibility and dynamic dispatch, while generics offer type-safe code reuse with compile-time type checking
 
 ---
 
@@ -149,7 +178,7 @@ The difference between `nil` interfaces and empty interfaces in Go is subtle but
 
 #### Empty interfaces
 
-- An empty interface (`interface{}`) can hold values of any type
+- An empty interface (`interface{}` or `any` in Go 1.18+) can hold values of any type
 - It may contain a nil value of a concrete type, but the interface itself is not nil
 - Direct nil checks can be misleading
 
@@ -182,7 +211,7 @@ default:
 3. For nil checks on interfaces, use reflection:
 
 ```go
-func IsNil(value interface{}) bool {
+func IsNil(value any) bool {
     return reflect.ValueOf(value).IsNil()
 }
 ```
@@ -266,36 +295,189 @@ Using `iota` simplifies the creation of related constants, making the code more 
 
 ---
 
-### 9. Compare slices vs arrays
+### 9. What are iterators and the yield function pattern in Go 1.23+? How do they work?
 
-Slices in Go are a flexible and dynamic way to work with collections of elements. They are far more common in application code than arrays due to their versatility and dynamic nature. Here’s how slices differ from arrays:
+Go 1.23 introduced a new iterator pattern using the `range` keyword over functions. While Go doesn't have a `yield` keyword like Python, it uses a `yield` function (passed as a parameter) to enable custom iteration logic. This allows developers to create custom iterators that work seamlessly with `range` loops.
 
-#### Dynamic Size
+#### Key Concepts
 
-Unlike arrays, slices can grow or shrink dynamically. They act as references to an underlying array, allowing operations like resizing without needing to define a fixed size upfront. This makes slices more adaptable for scenarios where the number of elements is not known beforehand.
+1. **Iterator Function Signature:** An iterator is a function that takes a `yield` function as a parameter. The `yield` function is called for each value to be yielded to the consumer
+2. **Yield Function:** A callback function with signature `func(T) bool` (single value) or `func(K, V) bool` (key-value pairs) that returns `true` to continue iteration or `false` to stop early
+3. **Range Over Function:** Go 1.23+ allows using `range` directly over functions that follow the iterator pattern
 
-Example:
+#### Standard Iterator Signatures
 
 ```go
-arr := [5]int{1, 2, 3, 4, 5} // Array with fixed size
-slc := arr[:3]               // Slice referencing the first 3 elements
+// Single-value iterator
+func(yield func(V) bool)
+
+// Key-value iterator
+func(yield func(K, V) bool)
 ```
 
-#### Underlying Array
-
-Slices do not store data themselves; instead, they point to an underlying array. This design makes them efficient for passing large collections of data between functions without copying the entire dataset.
-
-Example:
+#### Example: Custom Iterator
 
 ```go
-func modify(s []int) {
-    s[0] = 99 // Modifies the shared underlying array
+package main
+
+import "fmt"
+
+// Iterator function that generates even numbers up to max
+func evenNumbers(max int) func(yield func(int) bool) {
+    return func(yield func(int) bool) {
+        for i := 0; i <= max; i += 2 {
+            if !yield(i) { // Call yield for each value
+                return // Stop if yield returns false
+            }
+        }
+    }
 }
 
-arr := [5]int{1, 2, 3, 4, 5}
-slc := arr[:]
-modify(slc)
-fmt.Println(arr) // Output: [99 2 3 4 5]
+func main() {
+    // Using range over the iterator function
+    for num := range evenNumbers(10) {
+        fmt.Println(num)
+    }
+    // Output: 0, 2, 4, 6, 8, 10
+}
 ```
+
+#### Key-Value Iterator Example
+
+```go
+// Iterator that yields key-value pairs
+func mapIterator(m map[string]int) func(yield func(string, int) bool) {
+    return func(yield func(string, int) bool) {
+        for k, v := range m {
+            if !yield(k, v) {
+                return
+            }
+        }
+    }
+}
+
+func main() {
+    data := map[string]int{"a": 1, "b": 2, "c": 3}
+    for key, value := range mapIterator(data) {
+        fmt.Printf("%s: %d\n", key, value)
+    }
+}
+```
+
+#### How It Works
+
+1. The iterator function returns a function that accepts a `yield` callback
+2. Inside the iterator, `yield(value)` is called for each item to be produced
+3. The `range` loop receives values by calling the iterator with an internal yield function
+4. If the consumer breaks early, `yield` returns `false`, signaling the iterator to stop
+5. This provides lazy evaluation and memory efficiency for large or infinite sequences
+
+#### Advantages
+
+- **Lazy Evaluation:** Values are generated on-demand, not all at once
+- **Memory Efficient:** No need to create intermediate collections
+- **Early Termination:** Supports `break` in range loops
+- **Clean Syntax:** Works naturally with `range` loops
+- **Composability:** Iterators can be chained and transformed
+
+#### Common Use Cases
+
+- Custom collection traversal
+- Infinite sequences (fibonacci, primes)
+- Filtering and transforming data streams
+- Pagination or batched data processing
+- Tree/graph traversal algorithms
+
+---
+
+### 10. Compare slices vs arrays
+
+Go provides both arrays and slices for working with sequences of elements. Understanding their differences is crucial for writing efficient Go code.
+
+#### Arrays
+
+**Fixed Size:**
+
+- Arrays have a compile-time fixed size that's part of their type
+- `[5]int` and `[10]int` are different types
+- Cannot be resized after declaration
+
+**Value Semantics:**
+
+- Arrays are value types; copying an array copies all elements
+- Passing arrays to functions creates a full copy
+
+**Stack Allocation:**
+
+- Small arrays are typically allocated on the stack
+- More efficient for small, fixed-size collections
+
+Example:
+
+```go
+var arr [5]int = [5]int{1, 2, 3, 4, 5}
+arr2 := arr // Creates a complete copy
+arr2[0] = 99
+fmt.Println(arr[0])  // Output: 1 (unchanged)
+```
+
+#### Slices
+
+**Dynamic Size:**
+
+- Slices can grow or shrink dynamically
+- All slices of the same element type share the same type `[]int`
+- Can be resized using `append()`
+
+**Reference Semantics:**
+
+- Slices are reference types pointing to an underlying array
+- Copying a slice copies only the slice header (pointer, length, capacity)
+- Multiple slices can reference the same underlying array
+
+**Heap Allocation:**
+
+- The underlying array is typically allocated on the heap
+- More flexible but with slightly more overhead
+
+Example:
+
+```go
+slc := []int{1, 2, 3, 4, 5}
+slc2 := slc // Shares underlying array
+slc2[0] = 99
+fmt.Println(slc[0])  // Output: 99 (modified!)
+```
+
+#### Comparison Table
+
+| Feature             | Array                 | Slice                          |
+| :------------------ | :-------------------- | :----------------------------- |
+| Size                | Fixed at compile time | Dynamic                        |
+| Type                | Size is part of type  | Size not part of type          |
+| Passing to function | Copies all elements   | Copies only header (~24 bytes) |
+| Memory              | Usually stack         | Usually heap                   |
+| Resizable           | No                    | Yes (via append)               |
+| Common usage        | Rare                  | Very common                    |
+
+#### When to Use Each
+
+**Use Arrays when:**
+
+- Size is known at compile time and never changes
+- You need value semantics (full copies)
+- Working with small, fixed collections
+- Performance-critical code needing stack allocation
+
+**Use Slices when:**
+
+- Size is dynamic or unknown at compile time
+- You want to avoid copying large data structures
+- Building flexible APIs
+- Most general-purpose programming (default choice)
+
+#### Key Takeaway
+
+In practice, slices are used far more often than arrays in Go code due to their flexibility. Arrays are mainly used when you need fixed-size buffers or want to guarantee value semantics.
 
 ---
