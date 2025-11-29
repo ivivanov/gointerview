@@ -19,6 +19,7 @@ _Advanced Concepts and Topics_
 1. What role does garbage collection play?
 1. Explain reflection in Go and its use cases. Why should it be used sparingly?
 1. Explain how type assertions work in Go.
+1. What are iterators and the yield function pattern in Go 1.23+? How do they work?
 
 ## Answers:
 
@@ -277,5 +278,100 @@ Here, `p` implements the `Printer` interface. The assertion checks if it is of t
 - **Dynamic Method Checking:** Check if an object implements additional methods beyond its declared interface
 
 By using type assertions effectively and cautiously, you can handle dynamic types in Go while maintaining safety and clarity in your code.
+
+---
+
+### 8. What are iterators and the yield function pattern in Go 1.23+? How do they work?
+
+Go 1.23 introduced a new iterator pattern using the `range` keyword over functions. While Go doesn't have a `yield` keyword like Python, it uses a `yield` function (passed as a parameter) to enable custom iteration logic. This allows developers to create custom iterators that work seamlessly with `range` loops.
+
+#### Key Concepts
+
+1. **Iterator Function Signature:** An iterator is a function that takes a `yield` function as a parameter. The `yield` function is called for each value to be yielded to the consumer
+2. **Yield Function:** A callback function with signature `func(T) bool` (single value) or `func(K, V) bool` (key-value pairs) that returns `true` to continue iteration or `false` to stop early
+3. **Range Over Function:** Go 1.23+ allows using `range` directly over functions that follow the iterator pattern
+
+#### Standard Iterator Signatures
+
+```go
+// Single-value iterator
+func(yield func(V) bool)
+
+// Key-value iterator
+func(yield func(K, V) bool)
+```
+
+#### Example: Custom Iterator
+
+```go
+package main
+
+import "fmt"
+
+// Iterator function that generates even numbers up to max
+func evenNumbers(max int) func(yield func(int) bool) {
+    return func(yield func(int) bool) {
+        for i := 0; i <= max; i += 2 {
+            if !yield(i) { // Call yield for each value
+                return // Stop if yield returns false
+            }
+        }
+    }
+}
+
+func main() {
+    // Using range over the iterator function
+    for num := range evenNumbers(10) {
+        fmt.Println(num)
+    }
+    // Output: 0, 2, 4, 6, 8, 10
+}
+```
+
+#### Key-Value Iterator Example
+
+```go
+// Iterator that yields key-value pairs
+func mapIterator(m map[string]int) func(yield func(string, int) bool) {
+    return func(yield func(string, int) bool) {
+        for k, v := range m {
+            if !yield(k, v) {
+                return
+            }
+        }
+    }
+}
+
+func main() {
+    data := map[string]int{"a": 1, "b": 2, "c": 3}
+    for key, value := range mapIterator(data) {
+        fmt.Printf("%s: %d\n", key, value)
+    }
+}
+```
+
+#### How It Works
+
+1. The iterator function returns a function that accepts a `yield` callback
+2. Inside the iterator, `yield(value)` is called for each item to be produced
+3. The `range` loop receives values by calling the iterator with an internal yield function
+4. If the consumer breaks early, `yield` returns `false`, signaling the iterator to stop
+5. This provides lazy evaluation and memory efficiency for large or infinite sequences
+
+#### Advantages
+
+- **Lazy Evaluation:** Values are generated on-demand, not all at once
+- **Memory Efficient:** No need to create intermediate collections
+- **Early Termination:** Supports `break` in range loops
+- **Clean Syntax:** Works naturally with `range` loops
+- **Composability:** Iterators can be chained and transformed
+
+#### Common Use Cases
+
+- Custom collection traversal
+- Infinite sequences (fibonacci, primes)
+- Filtering and transforming data streams
+- Pagination or batched data processing
+- Tree/graph traversal algorithms
 
 ---
