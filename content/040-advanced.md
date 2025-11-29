@@ -13,7 +13,6 @@ _Advanced Concepts and Topics_
 ## Questions?
 
 1. What is dynamic dispatch?
-1. Explain the concept of monomorphization.
 1. What is GCShape stenciling?
 1. How does Go handle memory management?
 1. What role does garbage collection play?
@@ -40,23 +39,7 @@ designing high-performance systems.
 
 ---
 
-### 2. Explain the concept of monomorphization.
-
-Monomorphization is a compile-time process that transforms generic or polymorphic code into specialized, type-specific implementations. This technique is used in programming languages to improve performance and enable static type checking for generic code. Key aspects of monomorphization include:
-
-- **Code generation:** For each unique combination of types used with a generic function or data structure, the compiler creates a separate, specialized version
-- **Performance benefits:** Monomorphized code often runs faster than dynamic dispatch alternatives, as it allows for more effective optimization and eliminates the need for runtime type checks
-- **Compilation trade-offs:** While monomorphization can improve runtime performance, it may increase compilation time and binary size due to the creation of multiple specialized versions of generic code
-- **Implementation variations:** Some languages, like Go, use partial monomorphization. Go's approach, called "GCShape stenciling with Dictionaries," generates specialized versions based on broader type categories rather than individual types
-- **Comparison to other techniques:** Monomorphization differs from type erasure, another method for implementing generics. While monomorphization creates type-specific code, type erasure compiles generic functions into a single, type-agnostic version
-- **Use in different languages:** Monomorphization is used in languages like C++, Rust, and partially in Go. Each language may implement it slightly differently to balance performance, compilation speed, and code size
-
-Monomorphization allows for efficient implementation of generic code while maintaining type safety and enabling compile-time optimizations. However, it
-comes with trade-offs in terms of code size and compilation time that language designers and developers must consider.
-
----
-
-### 3. What is GCShape stenciling?
+### 2. What is GCShape stenciling?
 
 GCShape stenciling is a hybrid approach to implementing generics in Go, combining elements of monomorphization and dynamic dispatch. It works as follows:
 
@@ -74,7 +57,7 @@ GCShape stenciling represents a compromise between the performance benefits of f
 
 ---
 
-### 4. How does Go handle memory management?
+### 3. How does Go handle memory management?
 
 Go handles memory management through a combination of stack and heap allocations, with its garbage collector (GC) playing a central role in managing heap memory. Here's an overview of how memory management works in Go and the role of garbage collection:
 
@@ -97,7 +80,7 @@ Go handles memory management through a combination of stack and heap allocations
 
 ---
 
-### 5. What role does garbage collection play?
+### 4. What role does garbage collection play?
 
 Go's garbage collector automates the process of reclaiming unused memory, preventing manual memory management errors such as memory leaks or dangling pointers. It uses a **concurrent mark-and-sweep algorithm**, which operates as follows:
 
@@ -163,7 +146,7 @@ func main() {
 
 ---
 
-### 6. Explain reflection in Go and its use cases. Why should it be used sparingly?
+### 5. Explain reflection in Go and its use cases. Why should it be used sparingly?
 
 Reflection in Go is a powerful feature that allows programs to examine and manipulate their own structure at runtime. It is implemented through the `reflect` package, which provides tools for dynamic type and value manipulation.
 
@@ -212,7 +195,7 @@ In general, reflection should be considered when static alternatives are impract
 
 ---
 
-### 7. Explain how type assertions work in Go
+### 6. Explain how type assertions work in Go
 
 Type assertion in Go allows you to extract the underlying concrete value from a variable of interface type. This is particularly useful when working with interfaces, as they can hold values of any type, leading to ambiguity about the actual type stored.
 
@@ -281,7 +264,7 @@ By using type assertions effectively and cautiously, you can handle dynamic type
 
 ---
 
-### 8. What are iterators and the yield function pattern in Go 1.23+? How do they work?
+### 7. What are iterators and the yield function pattern in Go 1.23+? How do they work?
 
 Go 1.23 introduced a new iterator pattern using the `range` keyword over functions. While Go doesn't have a `yield` keyword like Python, it uses a `yield` function (passed as a parameter) to enable custom iteration logic. This allows developers to create custom iterators that work seamlessly with `range` loops.
 
