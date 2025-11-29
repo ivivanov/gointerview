@@ -13,7 +13,6 @@ _Advanced Concepts and Topics_
 ## Questions?
 
 1. What is dynamic dispatch?
-1. What is GCShape stenciling?
 1. How does Go handle memory management?
 1. What role does garbage collection play?
 1. Explain reflection in Go and its use cases. Why should it be used sparingly?
@@ -39,25 +38,7 @@ designing high-performance systems.
 
 ---
 
-### 2. What is GCShape stenciling?
-
-GCShape stenciling is a hybrid approach to implementing generics in Go, combining elements of monomorphization and dynamic dispatch. It works as follows:
-
-- The compiler generates different versions of generic functions based on the "GC shape" of types, which is determined by how types are represented in memory and interact with the garbage collector
-- Types with the same GC shape share the same generated code, while types with different shapes get separate versions. For example, all pointer types share the same GC shape and reuse the `*uint8` type implementation
-- To distinguish between types with the same GC shape, Go uses a "dictionary" parameter that provides type-specific information at runtime
-
-This approach offers several benefits:
-
-- It reduces code bloat compared to full monomorphization, as fewer specialized versions are generated
-- It maintains good performance by allowing compile-time optimizations for types with different GC shapes
-- It enables faster compile times and smaller binaries compared to full stenciling while still supporting generics
-
-GCShape stenciling represents a compromise between the performance benefits of full monomorphization and the code size efficiency of pure dynamic dispatch, allowing Go to implement generics without sacrificing its focus on fast compilation and runtime performance.
-
----
-
-### 3. How does Go handle memory management?
+### 2. How does Go handle memory management?
 
 Go handles memory management through a combination of stack and heap allocations, with its garbage collector (GC) playing a central role in managing heap memory. Here's an overview of how memory management works in Go and the role of garbage collection:
 
@@ -80,7 +61,7 @@ Go handles memory management through a combination of stack and heap allocations
 
 ---
 
-### 4. What role does garbage collection play?
+### 3. What role does garbage collection play?
 
 Go's garbage collector automates the process of reclaiming unused memory, preventing manual memory management errors such as memory leaks or dangling pointers. It uses a **concurrent mark-and-sweep algorithm**, which operates as follows:
 
@@ -146,7 +127,7 @@ func main() {
 
 ---
 
-### 5. Explain reflection in Go and its use cases. Why should it be used sparingly?
+### 4. Explain reflection in Go and its use cases. Why should it be used sparingly?
 
 Reflection in Go is a powerful feature that allows programs to examine and manipulate their own structure at runtime. It is implemented through the `reflect` package, which provides tools for dynamic type and value manipulation.
 
@@ -195,7 +176,7 @@ In general, reflection should be considered when static alternatives are impract
 
 ---
 
-### 6. Explain how type assertions work in Go
+### 5. Explain how type assertions work in Go
 
 Type assertion in Go allows you to extract the underlying concrete value from a variable of interface type. This is particularly useful when working with interfaces, as they can hold values of any type, leading to ambiguity about the actual type stored.
 
@@ -264,7 +245,7 @@ By using type assertions effectively and cautiously, you can handle dynamic type
 
 ---
 
-### 7. What are iterators and the yield function pattern in Go 1.23+? How do they work?
+### 6. What are iterators and the yield function pattern in Go 1.23+? How do they work?
 
 Go 1.23 introduced a new iterator pattern using the `range` keyword over functions. While Go doesn't have a `yield` keyword like Python, it uses a `yield` function (passed as a parameter) to enable custom iteration logic. This allows developers to create custom iterators that work seamlessly with `range` loops.
 
