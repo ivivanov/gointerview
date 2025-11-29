@@ -13,11 +13,11 @@ _Essential Concepts for Newcomers_
 ## Questions?
 
 1. What is Go, and what types of projects is it best suited for?
-1. Explain Go’s type system and how it differs from other popular languages.
+1. Explain Go's type system and how it differs from other popular languages.
 1. Explain pass-by-value semantics and how reference types work in Go.
 1. What are Go interfaces, and why are they important?
+1. What's the difference between nil interfaces and empty interfaces in Go?
 1. How do you implement polymorphism in Go?
-1. What’s the difference between `nil` interfaces and empty interfaces in Go? How do you handle type assertions safely?
 1. What are variadic functions in Go, and when should they be used?
 1. What is the `iota` keyword, and how is it used in Go?
 1. Compare slices vs arrays
@@ -124,7 +124,48 @@ Interfaces in Go provide a powerful tool for creating clean, modular, and extens
 
 ---
 
-### 5. How do you implement polymorphism in Go?
+### 5. What's the difference between nil interfaces and empty interfaces in Go?
+
+Understanding the distinction between nil interfaces and empty interfaces is crucial for writing correct Go code and avoiding subtle bugs.
+
+#### Nil Interfaces
+
+A **nil interface** has both its type and value set to `nil`:
+
+- It's the zero value of an interface type
+- Checking for nil directly (`if x == nil`) works as expected
+- Created when you declare an interface variable without assigning a value
+
+```go
+var w io.Writer  // nil interface (type=nil, value=nil)
+fmt.Println(w == nil)  // true
+```
+
+#### Empty Interfaces
+
+An **empty interface** (`interface{}` or `any` in Go 1.18+) can hold values of any type:
+
+- It may contain a nil value of a concrete type
+- But the interface itself is NOT nil (it has a type)
+- Direct nil checks can be misleading
+
+#### The Nil Interface Trap
+
+This is one of Go's most common gotchas:
+
+```go
+func main() {
+    var p *int = nil           // nil pointer
+    var i interface{} = p      // empty interface holding nil pointer
+
+    fmt.Println(p == nil)      // true
+    fmt.Println(i == nil)      // false! (interface has type *int, value nil)
+}
+```
+
+---
+
+### 6. How do you implement polymorphism in Go?
 
 Go implements polymorphism through two main approaches:
 
@@ -162,60 +203,6 @@ Contains([]string{"a", "b"}, "c")
 ```
 
 Both approaches have their use cases: interfaces provide runtime flexibility and dynamic dispatch, while generics offer type-safe code reuse with compile-time type checking
-
----
-
-### 6. What’s the difference between `nil` interfaces and empty interfaces in Go? How do you handle type assertions safely?
-
-The difference between `nil` interfaces and empty interfaces in Go is subtle but important:
-
-#### Nil interfaces
-
-- A nil interface has both its type and value set to nil
-- It's the zero value of an interface type
-- Checking for nil directly (e.g., `if x == nil`) works as expected
-
-#### Empty interfaces
-
-- An empty interface (`interface{}` or `any` in Go 1.18+) can hold values of any type
-- It may contain a nil value of a concrete type, but the interface itself is not nil
-- Direct nil checks can be misleading
-
-#### To handle type assertions safely:
-
-1. Use the two-value form of type assertion:
-
-```go
-value, ok := x.(Type)
-if ok {
-    // Type assertion succeeded
-} else {
-    // Type assertion failed
-}
-```
-
-2. Use type switches for multiple possible types:
-
-```go
-switch v := x.(type) {
-case string:
-    // v is a string
-case int:
-    // v is an int
-default:
-    // unknown type
-}
-```
-
-3. For nil checks on interfaces, use reflection:
-
-```go
-func IsNil(value any) bool {
-    return reflect.ValueOf(value).IsNil()
-}
-```
-
-These methods help prevent panics and provide safer type conversions when working with interfaces.
 
 ---
 
